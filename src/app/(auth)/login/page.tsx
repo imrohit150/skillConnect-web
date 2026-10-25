@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Lock, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { AuthField } from "@/components/auth-field";
-import { useLogin } from "@/lib/auth";
+import { useLogin } from "@/hooks/use-auth";
 import { loginSchema, type LoginValues } from "@/lib/validators";
 
 export default function LoginPage() {

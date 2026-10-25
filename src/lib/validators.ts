@@ -29,3 +29,17 @@ export const signupFormSchema = signupSchema.extend({
 });
 
 export type SignupFormValues = z.infer<typeof signupFormSchema>;
+
+const optionalUrl = z.union([z.url("Enter a valid URL"), z.literal("")]);
+
+export const profileFormSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters"),
+  profileImageUrl: optionalUrl,
+  bio: z.string().max(300, "Bio can be at most 300 characters"),
+  experienceLevel: z.enum(["Beginner", "Intermediate", "Advanced"]),
+  github: optionalUrl,
+  linkedin: optionalUrl,
+  portfolio: optionalUrl,
+});
+
+export type ProfileFormValues = z.infer<typeof profileFormSchema>;

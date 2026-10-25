@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ApiError } from "@/lib/api";
-import { useCurrentUser } from "@/lib/auth";
+import { useCurrentUser } from "@/hooks/use-auth";
 
 export default function Home() {
   const router = useRouter();

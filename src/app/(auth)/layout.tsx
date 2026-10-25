@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Logo } from "@/components/logo";
-import { useCurrentUser } from "@/lib/auth";
+import { useCurrentUser } from "@/hooks/use-auth";
 
 const people = [
   { initials: "AK", color: "from-cyan-400 to-sky-500" },

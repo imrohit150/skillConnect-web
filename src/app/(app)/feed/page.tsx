@@ -1,7 +1,7 @@
 "use client";
 
 import { Compass, MessageCircle, UserPlus, Users } from "lucide-react";
-import { useCurrentUser } from "@/lib/auth";
+import { useCurrentUser } from "@/hooks/use-auth";
 
 const quickLinks = [
   { icon: Compass, title: "Discover", text: "Find developers to connect with" },

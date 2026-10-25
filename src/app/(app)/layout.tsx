@@ -2,11 +2,12 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
 import { ApiError } from "@/lib/api";
-import { useCurrentUser, useLogout } from "@/lib/auth";
+import { useCurrentUser, useLogout } from "@/hooks/use-auth";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -43,12 +44,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
           <Logo href="/feed" />
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2.5">
+            <Link href="/profile" className="flex items-center gap-2.5">
               <span className="bg-brand flex size-9 items-center justify-center rounded-full text-sm font-semibold text-white">
                 {user.name.charAt(0).toUpperCase()}
               </span>
               <span className="hidden text-sm font-medium sm:block">{user.name}</span>
-            </div>
+            </Link>
             <Button
               variant="ghost"
               size="sm"

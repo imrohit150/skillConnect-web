@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Calendar, Lock, Mail, User } from "lucide-react";
 import { toast } from "sonner";
 import { AuthField } from "@/components/auth-field";
-import { useSignup } from "@/lib/auth";
+import { useSignup } from "@/hooks/use-auth";
 import { signupFormSchema, type SignupFormValues } from "@/lib/validators";
 
 export default function SignupPage() {
@@ -27,7 +27,7 @@ export default function SignupPage() {
     signup.mutate(
       { name, email, password, dateOfBirth },
       {
-        onSuccess: () => router.replace("/feed"),
+        onSuccess: () => router.replace("/profile?welcome=1"),
         onError: (error) => toast.error(error.message),
       },
     );
