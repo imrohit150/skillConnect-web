@@ -1,12 +1,14 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Briefcase, Code2, Globe, Image as ImageIcon, Link2, User } from "lucide-react";
+import { ArrowLeft, Briefcase, Code2, Globe, Image as ImageIcon, Link2, Loader2, Sparkles, User } from "lucide-react";
 import { toast } from "sonner";
 import { AuthField } from "@/components/auth-field";
+import { ProfileCard } from "@/components/profile-card";
 import { TagInput } from "@/components/tag-input";
 import { Label } from "@/components/ui/label";
 import { useMyProfile, useUpdateProfile } from "@/hooks/use-profile";
@@ -40,8 +42,12 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
     },
   });
 
-  const bioLength = (useWatch({ control, name: "bio" }) ?? "").length;
+  const bio = useWatch({ control, name: "bio" }) ?? "";
+  const bioLength = bio.length;
   const imageUrl = useWatch({ control, name: "profileImageUrl" });
+  const name = useWatch({ control, name: "name" }) ?? "";
+  const experienceLevel = useWatch({ control, name: "experienceLevel" });
+  const previewImage = imageUrl && !errors.profileImageUrl ? imageUrl : undefined;
 
   function onSubmit(values: ProfileFormValues) {
     const { github, linkedin, portfolio, ...rest } = values;
@@ -58,29 +64,27 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
-      <section className="glass space-y-4 rounded-3xl border bg-card p-6 sm:p-8">
-        <h2 className="text-lg font-bold">Basics</h2>
-        <div className="flex items-center gap-4">
-          {imageUrl && !errors.profileImageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt="" className="size-16 rounded-full border object-cover" />
-          ) : (
-            <span className="bg-brand flex size-16 items-center justify-center rounded-full text-2xl font-bold text-white">
-              {profile.name.charAt(0).toUpperCase()}
-            </span>
-          )}
-          <div className="flex-1">
-            <AuthField
-              id="profileImageUrl"
-              label="Profile image URL"
-              icon={ImageIcon}
-              placeholder="https://..."
-              error={errors.profileImageUrl?.message}
-              {...register("profileImageUrl")}
-            />
-          </div>
-        </div>
+    <div className="grid gap-6 lg:h-[calc(100dvh-14rem)] lg:min-h-[480px] lg:grid-cols-[22rem_minmax(0,1fr)]">
+    <div className="flex justify-center lg:items-start">
+      <ProfileCard
+        name={name}
+        bio={bio}
+        imageUrl={previewImage}
+        experienceLevel={experienceLevel}
+        skills={skills}
+      />
+    </div>
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex min-h-0 flex-col gap-4">
+      <div className="scroll-thin glass min-h-0 flex-1 space-y-4 overflow-y-auto rounded-3xl border bg-card p-6 sm:p-8">
+      <section className="space-y-4">
+        <AuthField
+          id="profileImageUrl"
+          label="Profile image URL"
+          icon={ImageIcon}
+          placeholder="https://..."
+          error={errors.profileImageUrl?.message}
+          {...register("profileImageUrl")}
+        />
         <AuthField
           id="name"
           label="Full name"
@@ -104,8 +108,7 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
         </div>
       </section>
 
-      <section className="glass space-y-4 rounded-3xl border bg-card p-6 sm:p-8">
-        <h2 className="text-lg font-bold">Skills &amp; experience</h2>
+      <section className="space-y-4">
         <TagInput
           id="skills"
           label="Skills"
@@ -137,14 +140,31 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
         />
       </section>
 
-      <section className="glass space-y-4 rounded-3xl border bg-card p-6 sm:p-8">
-        <h2 className="text-lg font-bold">Links</h2>
+      <section className="space-y-4">
         <AuthField id="github" label="GitHub" icon={Code2} placeholder="https://github.com/you" error={errors.github?.message} {...register("github")} />
         <AuthField id="linkedin" label="LinkedIn" icon={Link2} placeholder="https://linkedin.com/in/you" error={errors.linkedin?.message} {...register("linkedin")} />
         <AuthField id="portfolio" label="Portfolio" icon={Globe} placeholder="https://yoursite.dev" error={errors.portfolio?.message} {...register("portfolio")} />
       </section>
+      </div>
 
-      <div className="flex flex-col-reverse items-center justify-end gap-3 sm:flex-row">
+      <div className="flex flex-col items-center gap-2">
+        <button
+          type="submit"
+          disabled={!isValid || update.isPending}
+          className="bg-brand flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+        >
+          {update.isPending ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Sparkles className="size-4" />
+              {welcome ? "Save and continue" : "Update profile"}
+            </>
+          )}
+        </button>
         {welcome && (
           <button
             type="button"
@@ -154,15 +174,9 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
             Skip for now
           </button>
         )}
-        <button
-          type="submit"
-          disabled={!isValid || update.isPending}
-          className="bg-brand h-12 w-full cursor-pointer rounded-xl px-8 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none sm:w-auto"
-        >
-          {update.isPending ? "Saving..." : welcome ? "Save and continue" : "Save changes"}
-        </button>
       </div>
     </form>
+    </div>
   );
 }
 
@@ -171,8 +185,18 @@ function ProfileContent() {
   const { data: profile, isPending, error } = useMyProfile();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div>
+    <div className="mx-auto w-full max-w-[63.5rem] space-y-6">
+      <div className="flex items-center gap-4">
+        {!welcome && (
+          <Link
+            href="/feed"
+            aria-label="Back to feed"
+            className="glass flex size-11 shrink-0 items-center justify-center rounded-full border bg-white/80 text-muted-foreground transition hover:text-primary"
+          >
+            <ArrowLeft className="size-5" />
+          </Link>
+        )}
+        <div>
         <h1 className="text-3xl font-bold tracking-tight">
           {welcome ? (
             <>
@@ -187,6 +211,7 @@ function ProfileContent() {
             ? "Tell developers about yourself so they can find and connect with you."
             : "Keep your details fresh so the right people find you."}
         </p>
+        </div>
       </div>
 
       {isPending ? (

@@ -41,13 +41,23 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-1 flex-col">
       <header className="glass sticky top-0 z-40 border-b bg-background/60">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
+        <div className="flex h-16 w-full items-center justify-between px-6 lg:px-10">
           <Logo href="/feed" />
           <div className="flex items-center gap-3">
             <Link href="/profile" className="flex items-center gap-2.5">
-              <span className="bg-brand flex size-9 items-center justify-center rounded-full text-sm font-semibold text-white">
-                {user.name.charAt(0).toUpperCase()}
-              </span>
+              {user.profileImageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={user.profileImageUrl}
+                  alt=""
+                  referrerPolicy="no-referrer"
+                  className="size-9 rounded-full border object-cover"
+                />
+              ) : (
+                <span className="bg-brand flex size-9 items-center justify-center rounded-full text-sm font-semibold text-white">
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+              )}
               <span className="hidden text-sm font-medium sm:block">{user.name}</span>
             </Link>
             <Button
@@ -64,7 +74,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-6xl flex-1 p-6">{children}</main>
+      <main className="w-full flex-1 p-6 lg:px-10">{children}</main>
     </div>
   );
 }

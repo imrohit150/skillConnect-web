@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff, type LucideIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
@@ -32,14 +33,12 @@ export function AuthField({
       </Label>
       <div className="relative">
         <Icon className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-        <input
+        <Input
           id={id}
           type={isPassword && visible ? "text" : type}
           aria-invalid={!!error}
           className={cn(
-            "h-12 w-full rounded-xl border bg-white/80 pr-4 pl-10 text-sm shadow-sm outline-none transition",
-            "placeholder:text-muted-foreground/70 focus:border-primary focus:ring-4 focus:ring-primary/15",
-            "aria-invalid:border-destructive aria-invalid:ring-destructive/15",
+            "h-12 rounded-xl bg-white/80 pr-4 pl-10 shadow-sm focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/15",
             isPassword && "pr-16",
             className,
           )}
