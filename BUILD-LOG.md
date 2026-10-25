@@ -18,6 +18,7 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 5. Added `src/lib/api.ts`, a fetch wrapper that sends cookies (`credentials: "include"`) and throws a typed `ApiError`.
 6. Added `.env.example` with `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_SOCKET_URL`, and updated `.gitignore` so it is tracked while real env files stay ignored.
 7. Lint and build pass. The first push went to `main`.
+8. `api()` now refreshes the session automatically: on a 401 it calls `POST /auth/refresh` once (shared across parallel requests) and retries the original request. `/auth/*` paths are excluded to avoid loops.
 
 ## Setup notes
 
