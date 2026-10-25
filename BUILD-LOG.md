@@ -32,6 +32,7 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 19. Refactored the API layer into `src/constants/routes.ts` (all endpoints in `API_ROUTES`), `src/services/*.services.ts` (plain API functions per feature), `src/hooks/use-*.ts` (React Query hooks that call the services) and `src/types/index.ts` (shared types). Pages only use hooks. Behavior is unchanged. Convention for every new feature: add routes, then a service, then a hook.
 20. Redesigned `/profile` as a live `ProfileCard` (left) plus a single scrollable form with a fixed save button (right) and a round back button. App layout now uses the full width. Added a thin custom scrollbar (`.scroll-thin`), switched `AuthField` to the shadcn `Input`, removed unused sidebar/chart CSS variables, and added `referrerPolicy="no-referrer"` to user images (card and header avatar) to avoid hotlink blocking.
 21. Added the app shell: fixed-height layout (no page scrollbar, only the content area scrolls), a left `Sidebar` (Discover, Requests, Connections, Messages, profile card at the bottom) and a mobile `BottomNav`, in `components/app-nav.tsx`. Header now has only the logo and a restyled logout pill. Added placeholder pages for `/requests`, `/connections` and `/messages`; `/feed` is a placeholder too.
+22. Built the `/requests` page: Received (Accept / Ignore) and Sent (Cancel) tabs with counts, loading and empty states. Added `API_ROUTES.connections`, `services/connections.services.ts`, `hooks/use-connections.ts`, a reusable `RequestCard`, and the `PublicUser` / request types.
 
 ## Setup notes
 
@@ -46,4 +47,5 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 - Real-time chat with Socket.IO.
 - Premium subscription screen with Razorpay Checkout. Premium must only come from the backend's verify result.
 - Landing page and a "Coming Soon" video-call UI.
+
 

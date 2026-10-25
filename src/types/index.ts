@@ -27,3 +27,27 @@ export type Profile = {
 };
 
 export type ProfileUpdate = Partial<Omit<Profile, "email" | "premiumStatus">>;
+
+export type PublicUser = {
+  _id: string;
+  name: string;
+  bio?: string;
+  skills?: string[];
+  profileImageUrl?: string;
+  premiumStatus?: boolean;
+  interests?: string[];
+  experienceLevel?: ExperienceLevel;
+  socialLinks?: { github?: string; linkedin?: string; portfolio?: string };
+};
+
+export type ReceivedRequest = {
+  _id: string;
+  senderId: PublicUser;
+  createdAt: string;
+};
+
+export type SentRequest = {
+  _id: string;
+  recipientId: PublicUser;
+  createdAt: string;
+};
