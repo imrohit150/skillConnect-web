@@ -32,10 +32,12 @@ async function request(path: string, init: RequestInit): Promise<Response> {
   });
 }
 
+const NO_REFRESH_PATHS = ["/auth/login", "/auth/signup", "/auth/refresh"];
+
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   let res = await request(path, init);
 
-  if (res.status === 401 && !path.startsWith("/auth/")) {
+  if (res.status === 401 && !NO_REFRESH_PATHS.includes(path)) {
     if (await refreshSession()) {
       res = await request(path, init);
     }
