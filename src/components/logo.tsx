@@ -8,7 +8,7 @@ export function Logo({ className, href = "/" }: { className?: string; href?: str
         S
       </span>
       <span className="font-[family-name:sans-serif] text-xl font-semibold tracking-tight">
-        skill<span className="text-gradient">connect</span>
+        Skill<span className="text-gradient">Connect</span>
       </span>
     </Link>
   );

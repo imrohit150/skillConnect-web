@@ -2,10 +2,9 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
+import { BottomNav, Sidebar } from "@/components/app-nav";
 import { ApiError } from "@/lib/api";
 import { useCurrentUser, useLogout } from "@/hooks/use-auth";
 
@@ -39,42 +38,30 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex h-dvh flex-col overflow-hidden">
       <header className="glass sticky top-0 z-40 border-b bg-background/60">
         <div className="flex h-16 w-full items-center justify-between px-6 lg:px-10">
           <Logo href="/feed" />
           <div className="flex items-center gap-3">
-            <Link href="/profile" className="flex items-center gap-2.5">
-              {user.profileImageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={user.profileImageUrl}
-                  alt=""
-                  referrerPolicy="no-referrer"
-                  className="size-9 rounded-full border object-cover"
-                />
-              ) : (
-                <span className="bg-brand flex size-9 items-center justify-center rounded-full text-sm font-semibold text-white">
-                  {user.name.charAt(0).toUpperCase()}
-                </span>
-              )}
-              <span className="hidden text-sm font-medium sm:block">{user.name}</span>
-            </Link>
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
+              type="button"
               disabled={logout.isPending}
               onClick={() =>
                 logout.mutate(undefined, { onSettled: () => router.replace("/login") })
               }
+              className="flex h-10 cursor-pointer items-center gap-2 rounded-full border bg-white/70 px-4 text-sm font-semibold text-muted-foreground shadow-sm transition hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
             >
               <LogOut className="size-4" />
-              <span className="hidden sm:inline">Log out</span>
-            </Button>
+              <span className="hidden sm:inline">{logout.isPending ? "Logging out..." : "Log out"}</span>
+            </button>
           </div>
         </div>
       </header>
-      <main className="w-full flex-1 p-6 lg:px-10">{children}</main>
+      <div className="flex min-h-0 flex-1">
+        <Sidebar />
+        <main className="scroll-thin min-w-0 flex-1 overflow-y-auto p-6 pb-24 lg:px-10 lg:pb-6">{children}</main>
+      </div>
+      <BottomNav />
     </div>
   );
 }
