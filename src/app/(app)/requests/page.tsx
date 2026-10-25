@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Inbox, Loader2, Send, X } from "lucide-react";
+import Link from "next/link";
+import { Check, Compass, Inbox, Loader2, Send, X } from "lucide-react";
 import { toast } from "sonner";
+import { EmptyState } from "@/components/empty-state";
 import { RequestCard } from "@/components/request-card";
 import {
   useAcceptRequest,
@@ -18,14 +20,15 @@ type Tab = "received" | "sent";
 const outlineBtn =
   "flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white/80 text-sm font-semibold transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50";
 
-function Empty({ icon: Icon, text }: { icon: typeof Inbox; text: string }) {
+function DiscoverLink() {
   return (
-    <div className="flex flex-col items-center gap-3 py-24 text-center text-muted-foreground">
-      <span className="flex size-14 items-center justify-center rounded-full bg-accent text-accent-foreground">
-        <Icon className="size-6" />
-      </span>
-      {text}
-    </div>
+    <Link
+      href="/feed"
+      className="bg-brand inline-flex h-11 items-center gap-2 rounded-xl px-6 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5"
+    >
+      <Compass className="size-4" />
+      Discover developers
+    </Link>
   );
 }
 
@@ -44,7 +47,15 @@ function ReceivedList() {
 
   if (isPending) return <Spinner />;
   if (error) return <p className="text-destructive">{error.message}</p>;
-  if (data.length === 0) return <Empty icon={Inbox} text="No pending requests right now." />;
+  if (data.length === 0)
+    return (
+      <EmptyState
+        icon={Inbox}
+        title="No requests yet"
+        description="When another developer wants to connect with you, their request will show up here."
+        action={<DiscoverLink />}
+      />
+    );
 
   const busy = accept.isPending || ignore.isPending;
 
@@ -91,7 +102,15 @@ function SentList() {
 
   if (isPending) return <Spinner />;
   if (error) return <p className="text-destructive">{error.message}</p>;
-  if (data.length === 0) return <Empty icon={Send} text="You haven't sent any requests." />;
+  if (data.length === 0)
+    return (
+      <EmptyState
+        icon={Send}
+        title="No sent requests"
+        description="Requests you send to other developers will be listed here until they respond."
+        action={<DiscoverLink />}
+      />
+    );
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -128,7 +147,7 @@ export default function RequestsPage() {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-6">
+    <div className="flex min-h-full w-full flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Requests</h1>
         <p className="mt-1.5 text-muted-foreground">
@@ -136,7 +155,7 @@ export default function RequestsPage() {
         </p>
       </div>
 
-      <div className="inline-flex rounded-full border bg-white/70 p-1">
+      <div className="inline-flex w-fit rounded-full border bg-white/70 p-1">
         {tabs.map(({ id, label, count }) => (
           <button
             key={id}
