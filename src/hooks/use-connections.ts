@@ -5,6 +5,25 @@ import * as connectionsService from "@/services/connections.services";
 export const receivedRequestsKey = ["requests", "received"] as const;
 export const sentRequestsKey = ["requests", "sent"] as const;
 export const passedUsersKey = ["requests", "passed"] as const;
+export const connectionsKey = ["connections"] as const;
+
+export function useConnections() {
+  return useQuery({
+    queryKey: connectionsKey,
+    queryFn: connectionsService.getConnections,
+  });
+}
+
+export function useRemoveConnection() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: connectionsService.removeConnection,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: connectionsKey });
+      queryClient.invalidateQueries({ queryKey: usersKey });
+    },
+  });
+}
 
 export function usePassedUsers() {
   return useQuery({

@@ -68,6 +68,12 @@ export type UsersPage = {
   };
 };
 
+export type Connection = {
+  connectionId: string;
+  connectedAt: string;
+  user: PublicUser;
+};
+
 export type PassedUser = {
   _id: string;
   passedUserId: PublicUser;

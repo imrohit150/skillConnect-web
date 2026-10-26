@@ -1,6 +1,14 @@
 import { api } from "@/lib/api";
 import { API_ROUTES } from "@/constants/routes";
-import type { PassedUser, ReceivedRequest, SentRequest } from "@/types";
+import type { Connection, PassedUser, ReceivedRequest, SentRequest } from "@/types";
+
+export async function getConnections() {
+  return (await api<{ connections: Connection[] }>(API_ROUTES.connections.list)).connections;
+}
+
+export function removeConnection(userId: string) {
+  return api(API_ROUTES.connections.remove(userId), { method: "DELETE" });
+}
 
 export async function getReceivedRequests() {
   return (await api<{ requests: ReceivedRequest[] }>(API_ROUTES.connections.received)).requests;

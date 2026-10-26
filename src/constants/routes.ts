@@ -17,6 +17,8 @@ export const API_ROUTES = {
     passed: "/users/passed",
   },
   connections: {
+    list: "/connections",
+    remove: (userId: string) => `/connections/${userId}`,
     request: (userId: string) => `/connections/${userId}/request`,
     received: "/connections/requests/received",
     sent: "/connections/requests/sent",
