@@ -6,6 +6,7 @@ import { Check, Compass, EyeOff, Inbox, Loader2, Send, Undo2, X } from "lucide-r
 import { toast } from "sonner";
 import { EmptyState } from "@/components/empty-state";
 import { RequestCard } from "@/components/request-card";
+import { UserDrawer } from "@/components/user-drawer";
 import {
   useAcceptRequest,
   useCancelRequest,
@@ -46,6 +47,7 @@ function ReceivedList() {
   const { data, isPending, error } = useReceivedRequests();
   const accept = useAcceptRequest();
   const ignore = useIgnoreRequest();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   if (isPending) return <Spinner />;
   if (error) return <p className="text-destructive">{error.message}</p>;
@@ -60,47 +62,66 @@ function ReceivedList() {
     );
 
   const busy = accept.isPending || ignore.isPending;
+  const selected = data.find((r) => r._id === selectedId);
+
+  const actions = (request: (typeof data)[number], onDone?: () => void) => (
+    <>
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() =>
+          accept.mutate(request._id, {
+            onSuccess: () => {
+              toast.success(`You and ${request.senderId.name} are now connected`);
+              onDone?.();
+            },
+            onError: (e) => toast.error(e.message),
+          })
+        }
+        className="bg-brand flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-sm font-semibold text-white shadow-md shadow-cyan-500/25 transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <Check className="size-4" />
+        Accept
+      </button>
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() =>
+          ignore.mutate(request._id, {
+            onSuccess: () => onDone?.(),
+            onError: (e) => toast.error(e.message),
+          })
+        }
+        className={cn(outlineBtn, "text-muted-foreground hover:text-destructive")}
+      >
+        <X className="size-4" />
+        Ignore
+      </button>
+    </>
+  );
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      {data.map((request) => (
-        <RequestCard key={request._id} user={request.senderId}>
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() =>
-              accept.mutate(request._id, {
-                onSuccess: () => toast.success(`You and ${request.senderId.name} are now connected`),
-                onError: (e) => toast.error(e.message),
-              })
-            }
-            className="bg-brand flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-sm font-semibold text-white shadow-md shadow-cyan-500/25 transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Check className="size-4" />
-            Accept
-          </button>
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() =>
-              ignore.mutate(request._id, {
-                onError: (e) => toast.error(e.message),
-              })
-            }
-            className={cn(outlineBtn, "text-muted-foreground hover:text-destructive")}
-          >
-            <X className="size-4" />
-            Ignore
-          </button>
-        </RequestCard>
-      ))}
-    </div>
+    <>
+      <div className="grid gap-5 sm:grid-cols-3 2xl:grid-cols-4">
+        {data.map((request) => (
+          <RequestCard key={request._id} user={request.senderId} onOpen={() => setSelectedId(request._id)}>
+            {actions(request)}
+          </RequestCard>
+        ))}
+      </div>
+      <UserDrawer
+        user={selected?.senderId ?? null}
+        onClose={() => setSelectedId(null)}
+        footer={selected && <div className="flex gap-2">{actions(selected, () => setSelectedId(null))}</div>}
+      />
+    </>
   );
 }
 
 function SentList() {
   const { data, isPending, error } = useSentRequests();
   const cancel = useCancelRequest();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   if (isPending) return <Spinner />;
   if (error) return <p className="text-destructive">{error.message}</p>;
@@ -114,33 +135,50 @@ function SentList() {
       />
     );
 
+  const selected = data.find((r) => r._id === selectedId);
+
+  const actions = (request: (typeof data)[number], onDone?: () => void) => (
+    <button
+      type="button"
+      disabled={cancel.isPending}
+      onClick={() =>
+        cancel.mutate(request._id, {
+          onSuccess: () => {
+            toast.success("Request cancelled");
+            onDone?.();
+          },
+          onError: (e) => toast.error(e.message),
+        })
+      }
+      className={cn(outlineBtn, "text-muted-foreground hover:text-destructive")}
+    >
+      {cancel.isPending ? <Loader2 className="size-4 animate-spin" /> : <X className="size-4" />}
+      Cancel request
+    </button>
+  );
+
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      {data.map((request) => (
-        <RequestCard key={request._id} user={request.recipientId}>
-          <button
-            type="button"
-            disabled={cancel.isPending}
-            onClick={() =>
-              cancel.mutate(request._id, {
-                onSuccess: () => toast.success("Request cancelled"),
-                onError: (e) => toast.error(e.message),
-              })
-            }
-            className={cn(outlineBtn, "text-muted-foreground hover:text-destructive")}
-          >
-            {cancel.isPending ? <Loader2 className="size-4 animate-spin" /> : <X className="size-4" />}
-            Cancel request
-          </button>
-        </RequestCard>
-      ))}
-    </div>
+    <>
+      <div className="grid gap-5 sm:grid-cols-3 2xl:grid-cols-4">
+        {data.map((request) => (
+          <RequestCard key={request._id} user={request.recipientId} onOpen={() => setSelectedId(request._id)}>
+            {actions(request)}
+          </RequestCard>
+        ))}
+      </div>
+      <UserDrawer
+        user={selected?.recipientId ?? null}
+        onClose={() => setSelectedId(null)}
+        footer={selected && <div className="flex gap-2">{actions(selected, () => setSelectedId(null))}</div>}
+      />
+    </>
   );
 }
 
 function PassedList() {
   const { data, isPending, error } = usePassedUsers();
   const unpass = useUnpassUser();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   if (isPending) return <Spinner />;
   if (error) return <p className="text-destructive">{error.message}</p>;
@@ -154,27 +192,43 @@ function PassedList() {
       />
     );
 
+  const selected = data.find((r) => r._id === selectedId);
+
+  const actions = (item: (typeof data)[number], onDone?: () => void) => (
+    <button
+      type="button"
+      disabled={unpass.isPending}
+      onClick={() =>
+        unpass.mutate(item.passedUserId._id, {
+          onSuccess: () => {
+            toast.success(`${item.passedUserId.name} is back in Discover`);
+            onDone?.();
+          },
+          onError: (e) => toast.error(e.message),
+        })
+      }
+      className={cn(outlineBtn, "text-muted-foreground hover:text-primary")}
+    >
+      {unpass.isPending ? <Loader2 className="size-4 animate-spin" /> : <Undo2 className="size-4" />}
+      Undo pass
+    </button>
+  );
+
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      {data.map((item) => (
-        <RequestCard key={item._id} user={item.passedUserId}>
-          <button
-            type="button"
-            disabled={unpass.isPending}
-            onClick={() =>
-              unpass.mutate(item.passedUserId._id, {
-                onSuccess: () => toast.success(`${item.passedUserId.name} is back in Discover`),
-                onError: (e) => toast.error(e.message),
-              })
-            }
-            className={cn(outlineBtn, "text-muted-foreground hover:text-primary")}
-          >
-            {unpass.isPending ? <Loader2 className="size-4 animate-spin" /> : <Undo2 className="size-4" />}
-            Undo pass
-          </button>
-        </RequestCard>
-      ))}
-    </div>
+    <>
+      <div className="grid gap-5 sm:grid-cols-3 2xl:grid-cols-4">
+        {data.map((item) => (
+          <RequestCard key={item._id} user={item.passedUserId} onOpen={() => setSelectedId(item._id)}>
+            {actions(item)}
+          </RequestCard>
+        ))}
+      </div>
+      <UserDrawer
+        user={selected?.passedUserId ?? null}
+        onClose={() => setSelectedId(null)}
+        footer={selected && <div className="flex gap-2">{actions(selected, () => setSelectedId(null))}</div>}
+      />
+    </>
   );
 }
 
@@ -191,7 +245,7 @@ export default function RequestsPage() {
   ];
 
   return (
-    <div className="flex min-h-full w-full flex-col gap-6">
+    <div className="flex h-full min-h-0 w-full flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Requests</h1>
         <p className="mt-1.5 text-muted-foreground">
@@ -225,7 +279,9 @@ export default function RequestsPage() {
         ))}
       </div>
 
-      {tab === "received" ? <ReceivedList /> : tab === "sent" ? <SentList /> : <PassedList />}
+      <div className="scroll-thin -mx-2 flex min-h-0 flex-1 flex-col overflow-y-auto px-2 pb-2">
+        {tab === "received" ? <ReceivedList /> : tab === "sent" ? <SentList /> : <PassedList />}
+      </div>
     </div>
   );
 }

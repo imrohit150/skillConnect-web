@@ -8,6 +8,7 @@ import type { PublicUser } from "@/types";
 type UserDrawerProps = {
   user: PublicUser | null;
   onClose: () => void;
+  footer?: React.ReactNode;
 };
 
 function Chips({ title, items }: { title: string; items?: string[] }) {
@@ -29,7 +30,7 @@ function Chips({ title, items }: { title: string; items?: string[] }) {
   );
 }
 
-export function UserDrawer({ user, onClose }: UserDrawerProps) {
+export function UserDrawer({ user, onClose, footer }: UserDrawerProps) {
   const links = [
     { href: user?.socialLinks?.github, label: "GitHub", icon: Code2 },
     { href: user?.socialLinks?.linkedin, label: "LinkedIn", icon: Link2 },
@@ -105,7 +106,7 @@ export function UserDrawer({ user, onClose }: UserDrawerProps) {
               )}
             </div>
             <div className="border-t bg-background p-4">
-              <UserActions user={user} onDone={onClose} />
+              {footer ?? <UserActions user={user} onDone={onClose} />}
             </div>
           </>
         )}
