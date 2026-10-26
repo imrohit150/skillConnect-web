@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, MessageCircle, UserPlus, Users, UserRound } from "lucide-react";
+import { Compass, Crown, MessageCircle, UserPlus, Users, UserRound } from "lucide-react";
+import { PremiumBadge } from "@/components/premium-badge";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/hooks/use-auth";
 
@@ -39,6 +40,17 @@ export function Sidebar() {
           </Link>
         ))}
       </nav>
+      <div className="space-y-3">
+      <Link
+        href="/membership"
+        className={cn(
+          "flex items-center gap-3 rounded-2xl border border-primary/20 bg-white/70 p-4 transition hover:border-primary/50 hover:bg-white",
+          isActive("/membership") && "border-primary/60 bg-accent",
+        )}
+      >
+        <span className="bg-brand flex size-9 shrink-0 items-center justify-center rounded-xl text-white"><Crown className="size-4" /></span>
+        <span><span className="block text-sm font-semibold">Membership</span><span className="block text-xs text-muted-foreground">Plus badge · ₹99/month demo</span></span>
+      </Link>
       <Link
         href="/profile"
         className={cn(
@@ -60,10 +72,11 @@ export function Sidebar() {
           </span>
         )}
         <span className="min-w-0">
-          <span className="block truncate text-sm font-semibold">{user?.name}</span>
+          <span className="flex items-center gap-1"><span className="truncate text-sm font-semibold">{user?.name}</span>{user?.premiumStatus && <PremiumBadge />}</span>
           <span className="block text-xs text-muted-foreground">View profile</span>
         </span>
       </Link>
+      </div>
     </aside>
   );
 }

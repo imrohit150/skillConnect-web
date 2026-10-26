@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Briefcase, Camera, Code2, Globe, Link2, Loader2, Sparkles, User } from "lucide-react";
+import { ArrowLeft, ArrowRight, Briefcase, Camera, Code2, Crown, Globe, Link2, Loader2, Sparkles, User } from "lucide-react";
 import { toast } from "sonner";
 import { AuthField } from "@/components/auth-field";
 import { ProfileCard } from "@/components/profile-card";
@@ -91,6 +91,7 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
           imageUrl={profile.profileImageUrl || undefined}
           experienceLevel={experienceLevel}
           skills={skills}
+          premiumStatus={profile.premiumStatus}
         />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex min-h-0 flex-col gap-4">
@@ -247,6 +248,14 @@ function ProfileContent() {
           </p>
         </div>
       </div>
+
+      {!onboarding && (
+        <Link href="/membership" className="glass flex items-center gap-3 rounded-2xl border border-primary/20 bg-white/75 p-4 transition hover:border-primary/50 lg:hidden">
+          <span className="bg-brand flex size-10 shrink-0 items-center justify-center rounded-xl text-white"><Crown className="size-5" /></span>
+          <span className="min-w-0 flex-1"><span className="block font-semibold">Explore membership</span><span className="block text-xs text-muted-foreground">A premium badge for ₹99/month · demo only, no real payment</span></span>
+          <ArrowRight className="size-4 shrink-0 text-primary" />
+        </Link>
+      )}
 
       {isPending ? (
         <div className="flex justify-center py-20">

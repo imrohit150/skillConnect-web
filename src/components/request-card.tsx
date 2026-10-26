@@ -1,4 +1,5 @@
 import { Briefcase } from "lucide-react";
+import { PremiumBadge } from "@/components/premium-badge";
 import type { PublicUser } from "@/types";
 
 type RequestCardProps = {
@@ -30,7 +31,7 @@ export function RequestCard({ user, onOpen, children }: RequestCardProps) {
         </div>
         <div className="flex-1 space-y-2.5 px-3 pt-4">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="truncate text-lg font-bold">{user.name}</h3>
+          <div className="flex min-w-0 items-center gap-1"><h3 className="truncate text-lg font-bold">{user.name}</h3>{user.premiumStatus && <PremiumBadge />}</div>
           {user.experienceLevel && (
             <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground">
               <Briefcase className="size-3" />

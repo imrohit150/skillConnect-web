@@ -1,4 +1,5 @@
 import { Briefcase } from "lucide-react";
+import { PremiumBadge } from "@/components/premium-badge";
 
 type ProfileCardProps = {
   name: string;
@@ -6,9 +7,10 @@ type ProfileCardProps = {
   imageUrl?: string;
   experienceLevel?: string;
   skills?: string[];
+  premiumStatus?: boolean;
 };
 
-export function ProfileCard({ name, bio, imageUrl, experienceLevel, skills = [] }: ProfileCardProps) {
+export function ProfileCard({ name, bio, imageUrl, experienceLevel, skills = [], premiumStatus }: ProfileCardProps) {
   return (
     <div className="glass w-full max-w-sm overflow-hidden rounded-[2rem] border bg-white/80 p-3">
       <div className="relative aspect-square overflow-hidden rounded-3xl">
@@ -23,7 +25,7 @@ export function ProfileCard({ name, bio, imageUrl, experienceLevel, skills = [] 
       </div>
       <div className="space-y-3 px-3 pt-4 pb-3">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="truncate text-xl font-bold">{name || "Your name"}</h3>
+          <div className="flex min-w-0 items-center gap-1"><h3 className="truncate text-xl font-bold">{name || "Your name"}</h3>{premiumStatus && <PremiumBadge />}</div>
           {experienceLevel && (
             <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground">
               <Briefcase className="size-3" />

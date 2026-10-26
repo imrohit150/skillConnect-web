@@ -1,4 +1,9 @@
 export const API_ROUTES = {
+  payments: {
+    subscription: "/payments/subscription",
+    me: "/payments/subscription/me",
+    verify: "/payments/verify",
+  },
   auth: {
     signup: "/auth/signup",
     login: "/auth/login",

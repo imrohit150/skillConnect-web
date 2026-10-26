@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Calendar, Lock, Mail, User } from "lucide-react";
+import { ArrowRight, Lock, Mail, User } from "lucide-react";
 import { toast } from "sonner";
 import { AuthField } from "@/components/auth-field";
+import { DateOfBirthPicker } from "@/components/date-of-birth-picker";
 import { useSignup } from "@/hooks/use-auth";
 import { signupFormSchema, type SignupFormValues } from "@/lib/validators";
 
@@ -16,10 +17,12 @@ export default function SignupPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isValid },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupFormSchema),
     mode: "onChange",
+    defaultValues: { dateOfBirth: "" },
   });
 
   function onSubmit(values: SignupFormValues) {
@@ -62,15 +65,18 @@ export default function SignupPage() {
           error={errors.email?.message}
           {...register("email")}
         />
-        <AuthField
-          id="dateOfBirth"
-          label="Date of birth"
-          icon={Calendar}
-          type="date"
-          autoComplete="bday"
-          hint="You must be at least 18 years old."
-          error={errors.dateOfBirth?.message}
-          {...register("dateOfBirth")}
+        <Controller
+          name="dateOfBirth"
+          control={control}
+          render={({ field, fieldState }) => (
+            <DateOfBirthPicker
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              triggerRef={field.ref}
+              error={fieldState.error?.message}
+            />
+          )}
         />
         <AuthField
           id="password"

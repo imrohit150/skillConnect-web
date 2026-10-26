@@ -41,6 +41,16 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 28. Requests tabs now use the same large card as Discover (`RequestCard`), in the same grid (3 columns, 4 on very wide screens), with only the card area scrolling. Clicking a card opens the shared `UserDrawer`, which now takes a `footer` prop so each tab supplies its own actions (Accept / Ignore, Cancel request, Undo pass).
 29. Replaced `window.confirm` on `/connections` with the shadcn `dialog` component. Both card and drawer Remove actions open a styled confirmation with the developer's photo/name, a Keep connection button, and a destructive Remove button. The dialog focuses the safe action, blocks dismissal and repeated submissions while removal is pending, and stays open on errors for retry.
 
+30. Added `/membership` with Plus (blue premium badge, ₹99/month demo pricing) and Pro (video calling, Coming soon, unavailable to purchase). Added a desktop sidebar entry and a mobile Profile link. The page clearly explains that Razorpay checkout is in test mode with no real charge or recurring payment, and provides the official subscription test card details. Added membership routes, service, hooks, and a typed Checkout helper that rejects live keys. Plus activates only after backend verification, with cancellation/failure handling and verification retry without another checkout. Added a reusable blue `PremiumBadge` beside names in profiles, developer cards, requests, connections, the profile drawer and sidebar. Confirmed the configured test plan is INR 9900 paise, monthly. Checkout helper checks, lint and TypeScript passed; full Checkout/webhook testing remains outstanding. Production build was not completed, per request.
+
+31. Prefilled a sample contact number in the test-only Razorpay checkout and made it read-only, so demo visitors do not need to supply a personal mobile number. Added instructions to keep the prefilled number and select Continue if Razorpay displays its contact-details step.
+
+32. Added a test-mode OTP note to the membership checkout instructions: if prompted, enter any 6-digit number (for example, 123456). This documents the demo behavior confirmed during manual checkout testing.
+
+33. Replaced the signup browser-native date input with a reusable `DateOfBirthPicker` built from shadcn Calendar and Popover. Added a cyan header, styled month/year selectors (newest years first), readable selected date, and automatic closing after selection. Dates newer than the 18+ cutoff are disabled; React Hook Form validation and the backend's `yyyy-MM-dd` payload are preserved without UTC conversion. Connected the calendar day-button ref for keyboard focus. Lint and TypeScript passed; no production build run.
+
+34. Kept the signup birthday calendar below the input, aligned to its left edge, by disabling automatic side changes for this picker. Constrained the popup to the available viewport height with scrolling so it stays usable on shorter screens instead of moving beside the field.
+
 ## Setup notes
 
 - Copy `.env.example` to `.env.local`.
@@ -48,11 +58,8 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 
 ## Next
 
-- Auth pages (signup, login) and a current-user query that powers a protected layout.
-- Developer directory and profile pages.
-- Connection requests and the connections list.
 - Real-time chat with Socket.IO.
-- Premium subscription screen with Razorpay Checkout. Premium must only come from the backend's verify result.
-- Landing page and a "Coming Soon" video-call UI.
+- Test the complete Razorpay test Checkout and webhook flow end to end.
+- Demo data and deployment configuration.
 
 

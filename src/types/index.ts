@@ -9,6 +9,23 @@ export type User = {
   premiumStatus?: boolean;
 };
 
+export type Membership = {
+  premiumStatus: boolean;
+  premiumUntil: string | null;
+  subscription: { status: string; currentPeriodEnd: string | null } | null;
+};
+
+export type CheckoutSubscription = {
+  subscriptionId: string;
+  keyId: string;
+};
+
+export type PaymentConfirmation = {
+  razorpay_payment_id: string;
+  razorpay_subscription_id: string;
+  razorpay_signature: string;
+};
+
 export type LoginInput = { email: string; password: string };
 export type SignupInput = LoginInput & { name: string; dateOfBirth: string };
 
