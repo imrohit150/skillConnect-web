@@ -11,6 +11,7 @@ type AuthFieldProps = React.ComponentProps<"input"> & {
   icon: LucideIcon;
   error?: string;
   hint?: string;
+  required?: boolean;
 };
 
 export function AuthField({
@@ -18,6 +19,7 @@ export function AuthField({
   icon: Icon,
   error,
   hint,
+  required,
   id,
   type,
   className,
@@ -30,6 +32,7 @@ export function AuthField({
     <div className="space-y-1.5">
       <Label htmlFor={id} className="text-[13px] font-semibold">
         {label}
+        {required && <span className="text-destructive">*</span>}
       </Label>
       <div className="relative">
         <Icon className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />

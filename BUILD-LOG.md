@@ -37,6 +37,7 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 24. Built the Discover feed (`/feed`): debounced search with a clear icon, experience-level filter pills (both kept in the URL), an infinite-loading card grid (6 per page, gradient "Load more" button) where only the cards scroll, a right-side `UserDrawer` with full details and Connect / Pass actions, and empty states. Added `services/users.services.ts`, `hooks/use-users.ts`, `UserCard`, `UserActions` and the shadcn `sheet`.
 25. Added a Passed tab on `/requests` with an "Undo pass" button, backed by the new backend endpoint `DELETE /users/:userId/pass`. Passing and undoing keep the feed and the tab in sync.
 26. Profile photo is now an upload instead of a URL: an Upload/Change photo button (JPG, PNG or WebP, up to 5MB) calls `POST /profile/me/image`. A photo is required to save the profile, so "Skip for now" was removed. `api()` now sends `FormData` without forcing a JSON content type.
+27. Added a profile gate: until a profile has a photo and at least one skill (`isProfileComplete` in `lib/profile.ts`), the app layout hides the sidebar and bottom nav and redirects every route to `/profile`, which shows the welcome heading. Required fields (photo, name, skills) now show a red asterisk through a `required` prop on `AuthField` and `TagInput`; bio stays optional.
 
 ## Setup notes
 

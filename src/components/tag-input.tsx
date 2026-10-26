@@ -11,9 +11,10 @@ type TagInputProps = {
   value: string[];
   onChange: (value: string[]) => void;
   max?: number;
+  required?: boolean;
 };
 
-export function TagInput({ id, label, placeholder, value, onChange, max = 30 }: TagInputProps) {
+export function TagInput({ id, label, placeholder, value, onChange, max = 30, required }: TagInputProps) {
   const [draft, setDraft] = useState("");
 
   function add() {
@@ -28,6 +29,7 @@ export function TagInput({ id, label, placeholder, value, onChange, max = 30 }: 
     <div className="space-y-1.5">
       <Label htmlFor={id} className="text-[13px] font-semibold">
         {label}
+        {required && <span className="text-destructive">*</span>}
       </Label>
       <div className="flex min-h-12 flex-wrap items-center gap-2 rounded-xl border bg-white/80 p-2 shadow-sm transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
         {value.map((tag) => (
