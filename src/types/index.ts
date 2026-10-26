@@ -96,3 +96,39 @@ export type PassedUser = {
   passedUserId: PublicUser;
   createdAt: string;
 };
+
+// Starting a chat returns participant IDs, not populated user profiles.
+export type Conversation = {
+  _id: string;
+  participantOne: string;
+  participantTwo: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Message = {
+  _id: string;
+  conversationId: string;
+  senderId: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+// The inbox only includes these public fields for the other participant.
+export type ConversationSummary = {
+  conversationId: string;
+  user: Pick<PublicUser, "_id" | "name" | "profileImageUrl">;
+  lastMessage: Message | null;
+  lastActivityAt: string;
+};
+
+export type MessageHistoryQuery = {
+  before?: string;
+  limit?: number;
+};
+
+export type MessageHistoryPage = {
+  messages: Message[];
+  hasMore: boolean;
+};

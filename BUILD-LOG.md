@@ -51,6 +51,14 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 
 34. Kept the signup birthday calendar below the input, aligned to its left edge, by disabling automatic side changes for this picker. Constrained the popup to the available viewport height with scrolling so it stays usable on shorter screens instead of moving beside the field.
 
+35. Messaging step 1: inspected the backend conversation routes, controllers, models and validators. Added frontend types for raw conversations, inbox summaries, messages and cursor-paginated history; added conversation endpoint constants and `services/conversations.services.ts` with `getConversations`, `getOrCreateConversation` and `getMessages`. History accepts optional `before` and `limit`, preserves the backend's message ordering, and reuses the existing cookie/refresh/error-handling API wrapper. Hooks, chat UI and Socket.IO wiring remain for subsequent steps.
+
+36. Messaging step 2: added `useConversations` with a shared React Query cache key and replaced the Messages placeholder with a responsive inbox. Added reusable conversation rows showing the other developer's photo/name, latest-message preview (including a You prefix for outgoing messages), and activity time. Added skeleton loading, an empty state linking to Connections, retry on errors, manual refresh, and preservation of cached conversations if a refresh fails. Conversations retain the backend's newest-activity-first ordering. Opening chats and sending messages remain for subsequent steps.
+
+37. Messaging step 3: added `useStartConversation` and Message buttons on connection cards and profile drawers. The mutation finds or creates the backend conversation, refreshes the inbox cache and navigates to `/messages?conversation=<id>`. Inbox rows are now links with an active state. Messages uses a full-width split view on desktop and switches between inbox/chat panels on mobile with a Back button. Selection survives refresh through the URL; missing conversations and load errors have dedicated states. Added the selected developer's chat header and wrapped URL-dependent content in Suspense. Message history and sending remain for subsequent steps.
+
+38. Messaging step 4: added `useMessages` with a cache entry per conversation and replaced the chat placeholder with saved message history. Added reusable outgoing/incoming message bubbles, per-message timestamps, date separators, safe wrapping of long text and line breaks, and an initial scroll to the latest message. History is remounted per selected conversation so scroll state does not leak between chats. Added loading, empty, retry and cached-data error states. The first backend batch is shown in its original chronological order, with a latest-message-count note when older history exists. Loading older batches, Socket.IO and sending remain for subsequent steps.
+
 ## Setup notes
 
 - Copy `.env.example` to `.env.local`.

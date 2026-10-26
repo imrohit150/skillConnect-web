@@ -31,4 +31,9 @@ export const API_ROUTES = {
     ignore: (requestId: string) => `/connections/requests/${requestId}/ignore`,
     cancel: (requestId: string) => `/connections/requests/${requestId}/cancel`,
   },
+  conversations: {
+    list: "/conversations",
+    create: (userId: string) => `/conversations/${userId}`,
+    messages: (conversationId: string) => `/conversations/${conversationId}/messages`,
+  },
 } as const;

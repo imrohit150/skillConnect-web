@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { Compass, Loader2, UserMinus, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Compass, Loader2, MessageCircle, UserMinus, Users } from "lucide-react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/empty-state";
 import { RequestCard } from "@/components/request-card";
@@ -18,11 +19,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useConnections, useRemoveConnection } from "@/hooks/use-connections";
+import { useStartConversation } from "@/hooks/use-conversations";
 import type { Connection } from "@/types";
 
 export default function ConnectionsPage() {
+  const router = useRouter();
   const { data, isPending, error } = useConnections();
   const remove = useRemoveConnection();
+  const startConversation = useStartConversation();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [connectionToRemove, setConnectionToRemove] = useState<Connection | null>(null);
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
@@ -46,12 +50,33 @@ export default function ConnectionsPage() {
     return (
       <button
         type="button"
-        disabled={remove.isPending}
+        disabled={remove.isPending || startConversation.isPending}
         onClick={() => setConnectionToRemove(connection)}
         className="flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white/80 text-sm font-semibold text-muted-foreground transition hover:bg-white hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
       >
         {remove.isPending ? <Loader2 className="size-4 animate-spin" /> : <UserMinus className="size-4" />}
         Remove
+      </button>
+    );
+  }
+
+  function messageButton(connection: Connection) {
+    const opening = startConversation.isPending && startConversation.variables === connection.user._id;
+    return (
+      <button
+        type="button"
+        disabled={startConversation.isPending || remove.isPending}
+        onClick={() => startConversation.mutate(connection.user._id, {
+          onSuccess: (conversation) => {
+            setSelectedId(null);
+            router.push(`/messages?conversation=${conversation._id}`);
+          },
+          onError: (e) => toast.error(e.message),
+        })}
+        className="bg-brand flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-sm font-semibold text-white shadow-md shadow-cyan-500/25 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {opening ? <Loader2 className="size-4 animate-spin" /> : <MessageCircle className="size-4" />}
+        {opening ? "Opening..." : "Message"}
       </button>
     );
   }
@@ -93,6 +118,7 @@ export default function ConnectionsPage() {
                 user={connection.user}
                 onOpen={() => setSelectedId(connection.connectionId)}
               >
+                {messageButton(connection)}
                 {removeButton(connection)}
               </RequestCard>
             ))}
@@ -103,7 +129,7 @@ export default function ConnectionsPage() {
       <UserDrawer
         user={selected?.user ?? null}
         onClose={() => setSelectedId(null)}
-        footer={selected && <div className="flex gap-2">{removeButton(selected)}</div>}
+        footer={selected && <div className="flex gap-2">{messageButton(selected)}{removeButton(selected)}</div>}
       />
 
       <Dialog
