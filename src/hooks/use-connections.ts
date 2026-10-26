@@ -1,8 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { usersKey } from "@/hooks/use-users";
 import * as connectionsService from "@/services/connections.services";
 
 export const receivedRequestsKey = ["requests", "received"] as const;
 export const sentRequestsKey = ["requests", "sent"] as const;
+export const passedUsersKey = ["requests", "passed"] as const;
+
+export function usePassedUsers() {
+  return useQuery({
+    queryKey: passedUsersKey,
+    queryFn: connectionsService.getPassedUsers,
+  });
+}
+
+export function useUnpassUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: connectionsService.unpassUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: passedUsersKey });
+      queryClient.invalidateQueries({ queryKey: usersKey });
+    },
+  });
+}
 
 export function useReceivedRequests() {
   return useQuery({
@@ -42,5 +62,27 @@ export function useCancelRequest() {
   return useMutation({
     mutationFn: connectionsService.cancelRequest,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: sentRequestsKey }),
+  });
+}
+
+export function useSendRequest() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: connectionsService.sendRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: usersKey });
+      queryClient.invalidateQueries({ queryKey: sentRequestsKey });
+    },
+  });
+}
+
+export function usePassUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: connectionsService.passUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: usersKey });
+      queryClient.invalidateQueries({ queryKey: passedUsersKey });
+    },
   });
 }

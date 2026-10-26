@@ -12,6 +12,17 @@ export function useMyProfile() {
   });
 }
 
+export function useUploadProfileImage() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (file: File) => profileService.uploadProfileImage(file),
+    onSuccess: ({ user }) => {
+      queryClient.setQueryData(profileKey, user);
+      queryClient.invalidateQueries({ queryKey: currentUserKey });
+    },
+  });
+}
+
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
   return useMutation({

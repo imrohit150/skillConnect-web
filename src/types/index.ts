@@ -51,3 +51,25 @@ export type SentRequest = {
   recipientId: PublicUser;
   createdAt: string;
 };
+
+export type UserFilters = {
+  search?: string;
+  experienceLevel?: ExperienceLevel;
+};
+
+export type UsersPage = {
+  users: PublicUser[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+  };
+};
+
+export type PassedUser = {
+  _id: string;
+  passedUserId: PublicUser;
+  createdAt: string;
+};

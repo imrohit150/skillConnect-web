@@ -1,17 +1,17 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Briefcase, Code2, Globe, Image as ImageIcon, Link2, Loader2, Sparkles, User } from "lucide-react";
+import { ArrowLeft, Briefcase, Camera, Code2, Globe, Link2, Loader2, Sparkles, User } from "lucide-react";
 import { toast } from "sonner";
 import { AuthField } from "@/components/auth-field";
 import { ProfileCard } from "@/components/profile-card";
 import { TagInput } from "@/components/tag-input";
 import { Label } from "@/components/ui/label";
-import { useMyProfile, useUpdateProfile } from "@/hooks/use-profile";
+import { useMyProfile, useUpdateProfile, useUploadProfileImage } from "@/hooks/use-profile";
 import type { Profile } from "@/types";
 import { profileFormSchema, type ProfileFormValues } from "@/lib/validators";
 
@@ -20,6 +20,9 @@ const levels = ["Beginner", "Intermediate", "Advanced"] as const;
 function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean }) {
   const router = useRouter();
   const update = useUpdateProfile();
+  const upload = useUploadProfileImage();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const hasPhoto = Boolean(profile.profileImageUrl);
   const [skills, setSkills] = useState(profile.skills ?? []);
   const [interests, setInterests] = useState(profile.interests ?? []);
 
@@ -33,7 +36,6 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
     mode: "onChange",
     defaultValues: {
       name: profile.name,
-      profileImageUrl: profile.profileImageUrl ?? "",
       bio: profile.bio ?? "",
       experienceLevel: profile.experienceLevel ?? "Beginner",
       github: profile.socialLinks?.github ?? "",
@@ -44,10 +46,26 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
 
   const bio = useWatch({ control, name: "bio" }) ?? "";
   const bioLength = bio.length;
-  const imageUrl = useWatch({ control, name: "profileImageUrl" });
   const name = useWatch({ control, name: "name" }) ?? "";
   const experienceLevel = useWatch({ control, name: "experienceLevel" });
-  const previewImage = imageUrl && !errors.profileImageUrl ? imageUrl : undefined;
+
+  function onPickImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      toast.error("Choose a JPG, PNG or WebP image");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be 5MB or smaller");
+      return;
+    }
+    upload.mutate(file, {
+      onSuccess: () => toast.success("Photo uploaded"),
+      onError: (error) => toast.error(error.message),
+    });
+  }
 
   function onSubmit(values: ProfileFormValues) {
     const { github, linkedin, portfolio, ...rest } = values;
@@ -69,7 +87,7 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
       <ProfileCard
         name={name}
         bio={bio}
-        imageUrl={previewImage}
+        imageUrl={profile.profileImageUrl || undefined}
         experienceLevel={experienceLevel}
         skills={skills}
       />
@@ -77,14 +95,27 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex min-h-0 flex-col gap-4">
       <div className="scroll-thin glass min-h-0 flex-1 space-y-4 overflow-y-auto rounded-3xl border bg-card p-6 sm:p-8">
       <section className="space-y-4">
-        <AuthField
-          id="profileImageUrl"
-          label="Profile image URL"
-          icon={ImageIcon}
-          placeholder="https://..."
-          error={errors.profileImageUrl?.message}
-          {...register("profileImageUrl")}
-        />
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => fileInput.current?.click()}
+            disabled={upload.isPending}
+            className="flex h-11 cursor-pointer items-center gap-2 rounded-xl border bg-white px-4 text-sm font-semibold shadow-sm transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {upload.isPending ? <Loader2 className="size-4 animate-spin" /> : <Camera className="size-4" />}
+            {upload.isPending ? "Uploading..." : hasPhoto ? "Change photo" : "Upload photo"}
+          </button>
+          <p className="text-xs text-muted-foreground">
+            {hasPhoto ? "JPG, PNG or WebP, up to 5MB" : "Required. JPG, PNG or WebP, up to 5MB"}
+          </p>
+          <input
+            ref={fileInput}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={onPickImage}
+            className="hidden"
+          />
+        </div>
         <AuthField
           id="name"
           label="Full name"
@@ -150,7 +181,7 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
       <div className="flex flex-col items-center gap-2">
         <button
           type="submit"
-          disabled={!isValid || update.isPending}
+          disabled={!isValid || !hasPhoto || update.isPending || upload.isPending}
           className="bg-brand flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
           {update.isPending ? (
@@ -165,14 +196,8 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
             </>
           )}
         </button>
-        {welcome && (
-          <button
-            type="button"
-            onClick={() => router.replace("/feed")}
-            className="cursor-pointer text-sm font-medium text-muted-foreground transition hover:text-foreground"
-          >
-            Skip for now
-          </button>
+        {!hasPhoto && (
+          <p className="text-xs text-muted-foreground">Upload a profile photo to continue.</p>
         )}
       </div>
     </form>

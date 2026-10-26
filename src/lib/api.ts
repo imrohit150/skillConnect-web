@@ -27,11 +27,11 @@ function refreshSession(): Promise<boolean> {
 }
 
 async function request(path: string, init: RequestInit): Promise<Response> {
-  return fetch(`${API_URL}${path}`, {
-    ...init,
-    credentials: "include",
-    headers: { "Content-Type": "application/json", ...init.headers },
-  });
+  const headers = new Headers(init.headers);
+  if (!(init.body instanceof FormData) && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+  return fetch(`${API_URL}${path}`, { ...init, credentials: "include", headers });
 }
 
 const NO_REFRESH_PATHS: string[] = [

@@ -9,8 +9,15 @@ export const API_ROUTES = {
   profile: {
     me: "/profile/me",
     byId: (userId: string) => `/profile/${userId}`,
+    image: "/profile/me/image",
+  },
+  users: {
+    list: "/users",
+    pass: (userId: string) => `/users/${userId}/pass`,
+    passed: "/users/passed",
   },
   connections: {
+    request: (userId: string) => `/connections/${userId}/request`,
     received: "/connections/requests/received",
     sent: "/connections/requests/sent",
     accept: (requestId: string) => `/connections/requests/${requestId}/accept`,

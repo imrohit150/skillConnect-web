@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Compass, Inbox, Loader2, Send, X } from "lucide-react";
+import { Check, Compass, EyeOff, Inbox, Loader2, Send, Undo2, X } from "lucide-react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/empty-state";
 import { RequestCard } from "@/components/request-card";
@@ -10,12 +10,14 @@ import {
   useAcceptRequest,
   useCancelRequest,
   useIgnoreRequest,
+  usePassedUsers,
   useReceivedRequests,
   useSentRequests,
+  useUnpassUser,
 } from "@/hooks/use-connections";
 import { cn } from "@/lib/utils";
 
-type Tab = "received" | "sent";
+type Tab = "received" | "sent" | "passed";
 
 const outlineBtn =
   "flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white/80 text-sm font-semibold transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50";
@@ -136,14 +138,56 @@ function SentList() {
   );
 }
 
+function PassedList() {
+  const { data, isPending, error } = usePassedUsers();
+  const unpass = useUnpassUser();
+
+  if (isPending) return <Spinner />;
+  if (error) return <p className="text-destructive">{error.message}</p>;
+  if (data.length === 0)
+    return (
+      <EmptyState
+        icon={EyeOff}
+        title="No passed developers"
+        description="Developers you pass on in Discover are kept here, so you can bring them back anytime."
+        action={<DiscoverLink />}
+      />
+    );
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {data.map((item) => (
+        <RequestCard key={item._id} user={item.passedUserId}>
+          <button
+            type="button"
+            disabled={unpass.isPending}
+            onClick={() =>
+              unpass.mutate(item.passedUserId._id, {
+                onSuccess: () => toast.success(`${item.passedUserId.name} is back in Discover`),
+                onError: (e) => toast.error(e.message),
+              })
+            }
+            className={cn(outlineBtn, "text-muted-foreground hover:text-primary")}
+          >
+            {unpass.isPending ? <Loader2 className="size-4 animate-spin" /> : <Undo2 className="size-4" />}
+            Undo pass
+          </button>
+        </RequestCard>
+      ))}
+    </div>
+  );
+}
+
 export default function RequestsPage() {
   const [tab, setTab] = useState<Tab>("received");
   const received = useReceivedRequests();
   const sent = useSentRequests();
+  const passed = usePassedUsers();
 
   const tabs: { id: Tab; label: string; count?: number }[] = [
     { id: "received", label: "Received", count: received.data?.length },
     { id: "sent", label: "Sent", count: sent.data?.length },
+    { id: "passed", label: "Passed", count: passed.data?.length },
   ];
 
   return (
@@ -151,7 +195,7 @@ export default function RequestsPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Requests</h1>
         <p className="mt-1.5 text-muted-foreground">
-          Accept developers who want to connect, or manage the requests you sent.
+          Accept developers who want to connect, manage the requests you sent, or bring back people you passed.
         </p>
       </div>
 
@@ -181,7 +225,7 @@ export default function RequestsPage() {
         ))}
       </div>
 
-      {tab === "received" ? <ReceivedList /> : <SentList />}
+      {tab === "received" ? <ReceivedList /> : tab === "sent" ? <SentList /> : <PassedList />}
     </div>
   );
 }

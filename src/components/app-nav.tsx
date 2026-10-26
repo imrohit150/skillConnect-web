@@ -24,7 +24,7 @@ export function Sidebar() {
 
   return (
     <aside className="hidden h-full w-64 shrink-0 flex-col justify-between border-r bg-white/40 p-4 lg:flex">
-      <nav className="space-y-1">
+      <nav className="space-y-4">
         {items.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}

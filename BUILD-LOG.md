@@ -34,6 +34,9 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 21. Added the app shell: fixed-height layout (no page scrollbar, only the content area scrolls), a left `Sidebar` (Discover, Requests, Connections, Messages, profile card at the bottom) and a mobile `BottomNav`, in `components/app-nav.tsx`. Header now has only the logo and a restyled logout pill. Added placeholder pages for `/requests`, `/connections` and `/messages`; `/feed` is a placeholder too.
 22. Built the `/requests` page: Received (Accept / Ignore) and Sent (Cancel) tabs with counts, loading and empty states. Added `API_ROUTES.connections`, `services/connections.services.ts`, `hooks/use-connections.ts`, a reusable `RequestCard`, and the `PublicUser` / request types.
 23. Added a reusable `EmptyState` component (icon, title, optional description and action) that fills the available space, and used it for the empty Received and Sent request lists. Fixed the Received/Sent toggle width.
+24. Built the Discover feed (`/feed`): debounced search with a clear icon, experience-level filter pills (both kept in the URL), an infinite-loading card grid (6 per page, gradient "Load more" button) where only the cards scroll, a right-side `UserDrawer` with full details and Connect / Pass actions, and empty states. Added `services/users.services.ts`, `hooks/use-users.ts`, `UserCard`, `UserActions` and the shadcn `sheet`.
+25. Added a Passed tab on `/requests` with an "Undo pass" button, backed by the new backend endpoint `DELETE /users/:userId/pass`. Passing and undoing keep the feed and the tab in sync.
+26. Profile photo is now an upload instead of a URL: an Upload/Change photo button (JPG, PNG or WebP, up to 5MB) calls `POST /profile/me/image`. A photo is required to save the profile, so "Skip for now" was removed. `api()` now sends `FormData` without forcing a JSON content type.
 
 ## Setup notes
 
