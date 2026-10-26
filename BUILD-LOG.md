@@ -39,6 +39,8 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 26. Profile photo is now an upload instead of a URL: an Upload/Change photo button (JPG, PNG or WebP, up to 5MB) calls `POST /profile/me/image`. A photo is required to save the profile, so "Skip for now" was removed. `api()` now sends `FormData` without forcing a JSON content type.
 27. Added a profile gate: until a profile has a photo and at least one skill (`isProfileComplete` in `lib/profile.ts`), the app layout hides the sidebar and bottom nav and redirects every route to `/profile`, which shows the welcome heading. Required fields (photo, name, skills) now show a red asterisk through a `required` prop on `AuthField` and `TagInput`; bio stays optional.
 28. Requests tabs now use the same large card as Discover (`RequestCard`), in the same grid (3 columns, 4 on very wide screens), with only the card area scrolling. Clicking a card opens the shared `UserDrawer`, which now takes a `footer` prop so each tab supplies its own actions (Accept / Ignore, Cancel request, Undo pass).
+29. Replaced `window.confirm` on `/connections` with the shadcn `dialog` component. Both card and drawer Remove actions open a styled confirmation with the developer's photo/name, a Keep connection button, and a destructive Remove button. The dialog focuses the safe action, blocks dismissal and repeated submissions while removal is pending, and stays open on errors for retry.
+
 ## Setup notes
 
 - Copy `.env.example` to `.env.local`.
