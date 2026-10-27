@@ -69,3 +69,12 @@ export function useLogout() {
     onSettled: () => queryClient.clear(),
   });
 }
+
+export function useForgotPassword() {
+  return useMutation({ mutationFn: authService.forgotPassword });
+}
+
+export function useResetPassword() {
+  const queryClient = useQueryClient();
+  return useMutation({ mutationFn: authService.resetPassword, onSuccess: () => queryClient.clear() });
+}

@@ -43,6 +43,8 @@ async function request(path: string, init: RequestInit): Promise<Response> {
 const NO_REFRESH_PATHS: string[] = [
   API_ROUTES.auth.login,
   API_ROUTES.auth.signup,
+  API_ROUTES.auth.forgotPassword,
+  API_ROUTES.auth.resetPassword,
   API_ROUTES.auth.pendingSignup,
   API_ROUTES.auth.verifyEmail,
   API_ROUTES.auth.resendVerification,

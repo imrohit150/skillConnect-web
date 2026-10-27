@@ -69,6 +69,8 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 
 43. Added signup email verification with account creation AFTER the OTP succeeds. Signup now continues to `/verify-email` after the backend sends a code and stores temporary signup data; it does not log in or populate the current-user cache. Added a matching desktop/mobile OTP screen with numeric entry, leading-zero support, email autofill, expiry/resend countdowns, remaining attempts, incorrect/expired/locked-code states, delivery retry, a way back to change email, and expired-signup/login recovery. Pending signup is restored through an HttpOnly cookie and a backend metadata endpoint after refresh; no password or OTP is persisted in browser storage. Successful verification creates the verified account, fills the auth cache and opens profile setup. A failed automatic sign-in after account creation directs the user to login. Extended API errors with safe error codes/retry/attempt metadata and avoided auth-token refresh for pending-signup endpoints. Profile loading waits for a verified session, and the backend also protects app APIs and sockets. Updated isolated chat fixtures to use verified accounts. TypeScript/lint passed; all 24 Playwright cases passed (six signup browser cases, 18 chat/unit/API cases including unverified socket rejection), with desktop/mobile screenshots inspected. Backend signup service/HTTP checks also passed (25). These tests mock storage/email and browser signup API responses; live Resend/MongoDB signup still needs verification. No new dependencies, npm scripts or production build.
 
+44. Added Forgot password from Login, `/forgot-password`, and `/reset-password` with matching auth styling. Requests show a generic confirmation for every email and allow another request/email without exposing account existence. Reset links carry their token in the URL fragment; the client reads it without sending it in page requests, preserves it across refresh, removes it after success, and recovers if a replacement link opens in the same tab. Added new/confirm-password validation, password visibility controls, pending/error/retry states, missing/expired/used-link recovery, and a success screen returning to login. Auth layout permits recovery while signed in; a successful reset clears cached account data and the backend invalidates previous sessions. Added reset service/hooks/routes and excluded reset endpoints from auth refresh retries. TypeScript/lint passed; all 33 Playwright cases passed, including eight password-recovery browser flows and revoked socket-cookie rejection alongside signup/chat regressions. Inspected desktop/mobile reset screenshots. Backend service/HTTP checks also passed (39, using real bcrypt and mocked storage/email). The user subsequently tested and confirmed the forgot/reset flow works in their environment. No new dependencies/scripts or production build.
+
 ## Setup notes
 
 - Copy `.env.example` to `.env.local`.
@@ -77,7 +79,7 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 ## Next
 
 - Test signup OTP email delivery end to end with the backend and configured Resend sender.
-- Required before final demo-data setup: Forgot password / reset-password screens, integrated with the backend email service.
+- Verify old-session rejection against the live backend before final demo-data setup.
 - Test the complete Razorpay test Checkout and webhook flow end to end.
 - Demo data and deployment configuration.
 

@@ -18,6 +18,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const { data: user } = useCurrentUser();
 
   useEffect(() => {
+    if (pathname === "/forgot-password" || pathname === "/reset-password") return;
     if (!user) return;
     if (user.isEmailVerified) router.replace(pathname === "/verify-email" ? "/profile?welcome=1" : "/feed");
   }, [user, pathname, router]);

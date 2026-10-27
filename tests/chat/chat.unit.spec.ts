@@ -27,6 +27,22 @@ test("chat rejects an authenticated account whose email is not verified", async 
   } finally { socket.disconnect(); await request.post(`${api}/__test/reset`); }
 });
 
+test("chat rejects a socket cookie issued before a password reset", async ({ request }) => {
+  await request.post(`${api}/__test/reset`);
+  await request.post(`${api}/__test/login`, { data: { user: "a" } });
+  const token = (await request.storageState()).cookies.find((cookie) => cookie.name === "accessToken")!.value;
+  await request.post(`${api}/__test/control`, { data: { revokeSessions: "a" } });
+  const socket = io(api, { autoConnect: false, reconnection: false, transports: ["websocket"], extraHeaders: { Cookie: `accessToken=${token}` } });
+  try {
+    const failure = new Promise<Error>((resolve, reject) => {
+      socket.once("connect_error", resolve);
+      socket.once("connect", () => reject(new Error("Revoked session was admitted")));
+    });
+    socket.connect();
+    expect((await failure).message).toBe("Authentication error");
+  } finally { socket.disconnect(); await request.post(`${api}/__test/reset`); }
+});
+
 test("stable history cursor visits all messages, including equal timestamps", async ({ request }) => {
   await request.post(`${api}/__test/reset`);
   await request.post(`${api}/__test/login`, { data: { user: "a" } });

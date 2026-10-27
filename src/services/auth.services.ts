@@ -37,3 +37,11 @@ export function resendVerification() {
 export async function getPendingSignup() {
   return (await api<{ signup: PendingSignup }>(API_ROUTES.auth.pendingSignup)).signup;
 }
+
+export function forgotPassword(email: string) {
+  return api<{ message: string }>(API_ROUTES.auth.forgotPassword, { method: "POST", body: JSON.stringify({ email }) });
+}
+
+export function resetPassword(input: { token: string; newPassword: string }) {
+  return api<{ message: string }>(API_ROUTES.auth.resetPassword, { method: "POST", body: JSON.stringify(input) });
+}

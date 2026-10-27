@@ -13,6 +13,8 @@ export const API_ROUTES = {
     me: "/auth/me",
     verifyEmail: "/auth/email-verification/verify",
     resendVerification: "/auth/email-verification/resend",
+    forgotPassword: "/auth/forgot-password",
+    resetPassword: "/auth/reset-password",
   },
   profile: {
     me: "/profile/me",

@@ -18,7 +18,7 @@ const users = [
 ].map((user) => ({ ...user, isEmailVerified: true, emailVerifiedAt: "2026-10-27T00:00:00.000Z", profileImageUrl: avatar, skills: ["React"] }));
 let messages, conversations, connections, sequence, failOlder, failSend, silentSend;
 function reset() {
-  for (const user of users) user.isEmailVerified = true;
+  for (const user of users) { user.isEmailVerified = true; user.sessionVersion = 0; }
   sequence = 1000; failOlder = 0; failSend = false; silentSend = false;
   const createdAt = new Date(Date.now() - 86400000);
   conversations = [
@@ -132,6 +132,7 @@ const server = http.createServer(async (request, response) => {
     if (url.pathname === "/__test/control") {
       const values = await body(request);
       if (values.unverify) users.find((user) => user._id === ids[values.unverify]).isEmailVerified = false;
+      if (values.revokeSessions) users.find((user) => user._id === ids[values.revokeSessions]).sessionVersion++;
       if (values.failOlder) failOlder = values.failOlder;
       if (values.failSend) failSend = true;
       if (values.silentSend) silentSend = true;

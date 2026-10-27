@@ -64,6 +64,7 @@ export default function LoginPage() {
           {login.isPending ? "Logging in..." : "Log in"}
           {!login.isPending && <ArrowRight className="size-4" />}
         </button>
+        <p className="text-right"><Link href="/forgot-password" className="text-sm font-semibold text-primary hover:underline">Forgot password?</Link></p>
       </form>
 
       <p className="text-center text-sm text-muted-foreground">
