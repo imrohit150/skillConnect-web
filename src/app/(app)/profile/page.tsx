@@ -83,7 +83,7 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
   }
 
   return (
-    <div className="grid gap-6 lg:h-[calc(100dvh-14rem)] lg:min-h-[480px] lg:grid-cols-[22rem_minmax(0,1fr)]">
+    <div className="grid gap-3 sm:gap-6 lg:h-[calc(100dvh-14rem)] lg:min-h-[480px] lg:grid-cols-[22rem_minmax(0,1fr)]">
       <div className="flex justify-center lg:items-start">
         <ProfileCard
           name={name}
@@ -95,9 +95,9 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
         />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex min-h-0 flex-col gap-4">
-        <div className="scroll-thin glass min-h-0 flex-1 space-y-4 overflow-y-auto rounded-3xl border bg-card p-6 sm:p-8">
+        <div className="scroll-thin glass min-h-0 flex-1 space-y-3 overflow-y-auto rounded-2xl border bg-card p-4 sm:space-y-4 sm:rounded-3xl sm:p-8">
           <section className="space-y-4">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <button
                 type="button"
                 onClick={() => fileInput.current?.click()}
@@ -122,7 +122,7 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
                 className="hidden"
               />
             </div>
-            <AuthField
+            <AuthField compact
               id="name"
               label="Full name"
               required
@@ -131,14 +131,14 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
               {...register("name")}
             />
             <div className="space-y-1.5">
-              <Label htmlFor="bio" className="text-[13px] font-semibold">
+              <Label htmlFor="bio" className="text-xs font-semibold sm:text-[13px]">
                 Bio</Label>
               <textarea
                 id="bio"
                 rows={4}
                 maxLength={300}
                 placeholder="Tell other developers about yourself..."
-                className="w-full resize-none rounded-xl border bg-white/80 p-3.5 text-sm shadow-sm outline-none transition placeholder:text-muted-foreground/70 focus:border-primary focus:ring-4 focus:ring-primary/15"
+                className="w-full resize-none rounded-xl border bg-white/80 p-3 text-base shadow-sm outline-none transition placeholder:text-muted-foreground/70 focus:border-primary focus:ring-4 focus:ring-primary/15 sm:p-3.5 sm:text-sm"
                 {...register("bio")}
               />
               <p className="text-right text-xs text-muted-foreground">{bioLength}/300</p>
@@ -155,15 +155,15 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
               onChange={setSkills}
             />
             <div className="space-y-1.5">
-              <Label className="text-[13px] font-semibold">Experience level</Label>
+              <Label className="text-xs font-semibold sm:text-[13px]">Experience level</Label>
               <div className="grid grid-cols-3 gap-2">
                 {levels.map((level) => (
                   <label
                     key={level}
-                    className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border bg-white/80 py-3 text-sm font-medium shadow-sm transition has-[:checked]:border-primary has-[:checked]:bg-accent has-[:checked]:text-accent-foreground"
+                    className="flex min-h-11 cursor-pointer items-center justify-center gap-1 rounded-xl border bg-white/80 px-1 py-2 text-xs font-medium shadow-sm transition has-[:checked]:border-primary has-[:checked]:bg-accent has-[:checked]:text-accent-foreground sm:gap-2 sm:px-0 sm:py-3 sm:text-sm"
                   >
                     <input type="radio" value={level} className="sr-only" {...register("experienceLevel")} />
-                    <Briefcase className="size-4" />
+                    <Briefcase className="hidden size-4 sm:block" />
                     {level}
                   </label>
                 ))}
@@ -179,9 +179,9 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
           </section>
 
           <section className="space-y-4">
-            <AuthField id="github" label="GitHub" icon={Code2} placeholder="https://github.com/you" error={errors.github?.message} {...register("github")} />
-            <AuthField id="linkedin" label="LinkedIn" icon={Link2} placeholder="https://linkedin.com/in/you" error={errors.linkedin?.message} {...register("linkedin")} />
-            <AuthField id="portfolio" label="Portfolio" icon={Globe} placeholder="https://yoursite.dev" error={errors.portfolio?.message} {...register("portfolio")} />
+            <AuthField compact id="github" label="GitHub" icon={Code2} placeholder="https://github.com/you" error={errors.github?.message} {...register("github")} />
+            <AuthField compact id="linkedin" label="LinkedIn" icon={Link2} placeholder="https://linkedin.com/in/you" error={errors.linkedin?.message} {...register("linkedin")} />
+            <AuthField compact id="portfolio" label="Portfolio" icon={Globe} placeholder="https://yoursite.dev" error={errors.portfolio?.message} {...register("portfolio")} />
           </section>
         </div>
 
@@ -189,7 +189,7 @@ function ProfileForm({ profile, welcome }: { profile: Profile; welcome: boolean 
           <button
             type="submit"
             disabled={!isValid || !hasPhoto || (welcome && skills.length === 0) || update.isPending || upload.isPending}
-            className="bg-brand flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+            className="bg-brand flex h-11 w-full sm:h-12 cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
           >
             {update.isPending ? (
               <>
@@ -220,8 +220,8 @@ function ProfileContent() {
   const onboarding = welcome || (profile ? !isProfileComplete(profile) : false);
 
   return (
-    <div className="mx-auto w-full max-w-[63.5rem] space-y-6">
-      <div className="flex items-center gap-4">
+    <div className="mx-auto w-full max-w-[63.5rem] space-y-3 sm:space-y-6">
+      <div className="flex items-center gap-3 sm:gap-4">
         {!onboarding && (
           <Link
             href="/feed"
@@ -232,7 +232,7 @@ function ProfileContent() {
           </Link>
         )}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-xl font-bold tracking-tight sm:text-3xl">
             {onboarding ? (
               <>
                 Welcome to <span className="text-gradient">SkillConnect</span> 🎉
@@ -241,7 +241,7 @@ function ProfileContent() {
               "Your profile"
             )}
           </h1>
-          <p className="mt-1.5 text-muted-foreground">
+          <p className="mt-1 text-xs leading-5 text-muted-foreground sm:mt-1.5 sm:text-base sm:leading-6">
             {onboarding
               ? "Add a photo and your skills to unlock SkillConnect."
               : "Keep your details fresh so the right people find you."}
@@ -250,7 +250,7 @@ function ProfileContent() {
       </div>
 
       {!onboarding && (
-        <Link href="/membership" className="glass flex items-center gap-3 rounded-2xl border border-primary/20 bg-white/75 p-4 transition hover:border-primary/50 lg:hidden">
+        <Link href="/membership" className="glass flex items-center gap-3 rounded-2xl border border-primary/20 bg-white/75 p-3 text-sm transition sm:p-4 sm:text-base hover:border-primary/50 lg:hidden">
           <span className="bg-brand flex size-10 shrink-0 items-center justify-center rounded-xl text-white"><Crown className="size-5" /></span>
           <span className="min-w-0 flex-1"><span className="block font-semibold">Explore membership</span><span className="block text-xs text-muted-foreground">A premium badge for ₹99/month · demo only, no real payment</span></span>
           <ArrowRight className="size-4 shrink-0 text-primary" />

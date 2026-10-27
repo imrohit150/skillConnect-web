@@ -12,8 +12,8 @@ type ProfileCardProps = {
 
 export function ProfileCard({ name, bio, imageUrl, experienceLevel, skills = [], premiumStatus }: ProfileCardProps) {
   return (
-    <div className="glass w-full max-w-sm overflow-hidden rounded-[2rem] border bg-white/80 p-3">
-      <div className="relative aspect-square overflow-hidden rounded-3xl">
+    <div className="glass grid w-full max-w-sm grid-cols-[4.5rem_minmax(0,1fr)] gap-3 overflow-hidden rounded-2xl border bg-white/80 p-3 sm:block sm:rounded-[2rem]">
+      <div className="relative aspect-square self-start overflow-hidden rounded-xl sm:rounded-3xl">
         {imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={imageUrl} alt="" referrerPolicy="no-referrer" className="size-full object-cover" />
@@ -23,17 +23,17 @@ export function ProfileCard({ name, bio, imageUrl, experienceLevel, skills = [],
           </div>
         )}
       </div>
-      <div className="space-y-3 px-3 pt-4 pb-3">
+      <div className="min-w-0 space-y-2 sm:space-y-3 sm:px-3 sm:pt-4 sm:pb-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-1"><h3 className="truncate text-xl font-bold">{name || "Your name"}</h3>{premiumStatus && <PremiumBadge />}</div>
+          <div className="flex min-w-0 items-center gap-1"><h3 className="truncate text-base font-bold sm:text-xl">{name || "Your name"}</h3>{premiumStatus && <PremiumBadge />}</div>
           {experienceLevel && (
-            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground">
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-accent px-2 py-1 text-[10px] font-semibold text-accent-foreground sm:px-2.5 sm:text-xs">
               <Briefcase className="size-3" />
               {experienceLevel}
             </span>
           )}
         </div>
-        <p className="line-clamp-3 min-h-[3.75rem] text-sm leading-relaxed text-muted-foreground">
+        <p className="line-clamp-2 text-xs leading-5 text-muted-foreground sm:line-clamp-3 sm:min-h-[3.75rem] sm:text-sm sm:leading-relaxed">
           {bio || "Your bio will appear here."}
         </p>
         {skills.length > 0 && (

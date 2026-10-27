@@ -21,7 +21,7 @@ export function ConversationPanel({ conversationId, conversation, chat, currentU
   return (
     <>
       {conversationId && (
-        <div className="flex shrink-0 items-center gap-3 border-b bg-white/50 p-4 sm:p-5">
+        <div className="flex shrink-0 items-center gap-2 border-b bg-white/50 p-3 sm:gap-3 sm:p-5">
           <Link href="/messages" scroll={false} aria-label="Back to conversations" className="flex size-9 shrink-0 items-center justify-center rounded-xl border bg-white text-muted-foreground transition hover:text-primary md:hidden">
             <ArrowLeft className="size-4" />
           </Link>
@@ -29,12 +29,12 @@ export function ConversationPanel({ conversationId, conversation, chat, currentU
             <>
               {conversation.user.profileImageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={conversation.user.profileImageUrl} alt="" referrerPolicy="no-referrer" className="size-11 shrink-0 rounded-2xl border-2 border-white object-cover shadow-sm" />
+                <img src={conversation.user.profileImageUrl} alt="" referrerPolicy="no-referrer" className="size-9 shrink-0 rounded-xl border-2 border-white object-cover shadow-sm sm:size-11 sm:rounded-2xl" />
               ) : (
-                <span className="bg-brand flex size-11 shrink-0 items-center justify-center rounded-2xl font-semibold text-white">{conversation.user.name.charAt(0).toUpperCase()}</span>
+                <span className="bg-brand flex size-9 shrink-0 items-center justify-center rounded-xl font-semibold text-white sm:size-11 sm:rounded-2xl">{conversation.user.name.charAt(0).toUpperCase()}</span>
               )}
               <div className="min-w-0">
-                <div className="flex items-center gap-1.5"><h2 className="truncate font-semibold">{conversation.user.name}</h2>{conversation.user.premiumStatus && <PremiumBadge />}</div>
+                <div className="flex items-center gap-1.5"><h2 className="truncate text-sm font-semibold sm:text-base">{conversation.user.name}</h2>{conversation.user.premiumStatus && <PremiumBadge />}</div>
                 <p className="text-xs text-muted-foreground">Private conversation</p>
               </div>
             </>

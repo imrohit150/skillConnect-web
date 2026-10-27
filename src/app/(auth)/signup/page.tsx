@@ -39,14 +39,15 @@ export default function SignupPage() {
   return (
     <>
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Create your account ✨</h2>
-        <p className="mt-1.5 text-sm text-muted-foreground">
+        <h2 className="text-[22px] leading-7 font-bold tracking-tight sm:text-3xl sm:leading-9">Create your account ✨</h2>
+        <p className="mt-1 text-xs leading-4 text-muted-foreground sm:mt-1.5 sm:text-sm sm:leading-5">
           Join the community. Your next connection awaits.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-3.5">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-1.5 sm:space-y-3.5">
         <AuthField
+          compact
           id="name"
           label="Full name"
           icon={User}
@@ -56,6 +57,7 @@ export default function SignupPage() {
           {...register("name")}
         />
         <AuthField
+          compact
           id="email"
           label="Email address"
           icon={Mail}
@@ -70,6 +72,7 @@ export default function SignupPage() {
           control={control}
           render={({ field, fieldState }) => (
             <DateOfBirthPicker
+              compact
               value={field.value}
               onChange={field.onChange}
               onBlur={field.onBlur}
@@ -79,6 +82,7 @@ export default function SignupPage() {
           )}
         />
         <AuthField
+          compact
           id="password"
           label="Password"
           icon={Lock}
@@ -90,7 +94,7 @@ export default function SignupPage() {
         />
 
         <div>
-          <label className="flex items-center gap-2.5 text-sm text-muted-foreground">
+          <label className="flex items-center gap-2 text-xs leading-4 text-muted-foreground sm:gap-2.5 sm:text-sm sm:leading-5">
             <input
               type="checkbox"
               className="size-4 rounded border accent-cyan-600"
@@ -110,16 +114,16 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={!isValid || signup.isPending}
-          className="bg-brand flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          className="bg-brand flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none sm:h-12"
         >
           {signup.isPending ? "Sending verification code..." : "Continue with email"}
           {!signup.isPending && <ArrowRight className="size-4" />}
         </button>
       </form>
 
-      <p className="-mt-2 text-center text-xs leading-relaxed text-muted-foreground">We&apos;ll email you a verification code. Your account is created only after you verify your email.</p>
+      <p className="text-center text-[11px] leading-4 text-muted-foreground sm:-mt-2 sm:text-xs sm:leading-relaxed">We&apos;ll email you a verification code. Your account is created only after you verify your email.</p>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-center text-xs leading-4 text-muted-foreground sm:text-sm sm:leading-5">
         Already have an account?{" "}
         <Link href="/login" className="font-semibold text-primary hover:underline">
           Log in

@@ -34,26 +34,26 @@ export default function MembershipPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-7 pb-4">
+    <div className="mx-auto w-full max-w-5xl space-y-4 pb-4 sm:space-y-7">
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         onReady={() => { setScriptReady(true); setScriptError(false); }}
         onError={() => { setScriptReady(false); setScriptError(true); }}
       />
 
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/70 px-3 py-1.5 text-xs font-semibold text-primary">
           <Crown className="size-3.5" /> SkillConnect Membership
         </span>
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Good connections. <span className="text-gradient">A little extra.</span></h1>
-        <p className="max-w-2xl leading-relaxed text-muted-foreground">Make your profile stand out today. Bring your connections face to face tomorrow.</p>
+        <h1 className="text-[22px] leading-7 font-bold tracking-tight sm:text-4xl sm:leading-10">Good connections. <span className="text-gradient">A little extra.</span></h1>
+        <p className="max-w-2xl text-xs leading-5 sm:text-base sm:leading-relaxed text-muted-foreground">Make your profile stand out today. Bring your connections face to face tomorrow.</p>
       </div>
 
-      <div className="flex items-start gap-3 rounded-2xl border border-cyan-200 bg-cyan-50/90 p-4 sm:p-5">
+      <div className="flex items-start gap-3 rounded-2xl border border-cyan-200 bg-cyan-50/90 p-3 sm:p-5">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-cyan-700 shadow-sm"><FlaskConical className="size-5" /></span>
         <div className="space-y-1">
-          <p className="font-semibold text-cyan-950">This is a demo. You don’t have to pay real money.</p>
-          <p className="text-sm leading-relaxed text-cyan-900/75">Checkout runs in Razorpay test mode. No real money is charged, and there are no real recurring payments. Use the test card below instead of your own card.</p>
+          <p className="text-sm font-semibold text-cyan-950 sm:text-base">This is a demo. You don’t have to pay real money.</p>
+          <p className="text-xs leading-5 text-cyan-900/75 sm:text-sm sm:leading-relaxed">Checkout runs in Razorpay test mode. No real money is charged, and there are no real recurring payments. Use the test card below instead of your own card.</p>
         </div>
       </div>
 
@@ -81,31 +81,31 @@ export default function MembershipPage() {
         </p>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <section className="relative flex flex-col overflow-hidden rounded-[2rem] border border-primary/30 bg-white/85 p-6 shadow-xl shadow-cyan-900/5 sm:p-8">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+        <section className="relative flex flex-col overflow-hidden rounded-[2rem] border border-primary/30 bg-white/85 p-4 shadow-xl shadow-cyan-900/5 sm:p-8">
           <div className="bg-brand absolute inset-x-0 top-0 h-1.5" />
-          <div className="mb-6 flex items-center justify-between gap-3">
+          <div className="mb-4 flex items-center sm:mb-6 justify-between gap-3">
             <span className="bg-brand flex size-12 items-center justify-center rounded-2xl text-white shadow-lg shadow-cyan-500/20"><BadgeCheck className="size-6" /></span>
             <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">{active ? "Your current plan" : "Available in demo"}</span>
           </div>
-          <h2 className="text-2xl font-bold">Plus</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">Plus</h2>
           <p className="mt-2 text-sm text-muted-foreground">A small badge. A profile that stands out.</p>
-          <div className="mt-6 flex items-baseline gap-1.5"><span className="text-5xl font-bold tracking-tight">₹99</span><span className="text-sm text-muted-foreground">/ month</span></div>
+          <div className="mt-4 flex items-baseline sm:mt-6 gap-1.5"><span className="text-4xl font-bold sm:text-5xl tracking-tight">₹99</span><span className="text-sm text-muted-foreground">/ month</span></div>
           <p className="mt-2 text-xs font-medium text-primary">Demo price · no real charge</p>
 
-          <div className="my-6 flex items-center gap-3 rounded-2xl border bg-background/60 p-4">
+          <div className="my-4 flex sm:my-6 items-center gap-3 rounded-2xl border bg-background/60 p-4">
             <span className="bg-brand flex size-10 shrink-0 items-center justify-center rounded-full font-bold text-white">{user?.name.charAt(0).toUpperCase() || "S"}</span>
             <div className="min-w-0"><div className="flex items-center gap-1.5"><span className="truncate text-sm font-semibold">{user?.name || "Your name"}</span><PremiumBadge /></div><p className="text-xs text-muted-foreground">Your premium look</p></div>
             <Sparkles className="ml-auto size-5 shrink-0 text-primary/60" />
           </div>
 
-          <ul className="mb-8 space-y-3">
-            {plusFeatures.map((feature) => <li key={feature} className="flex items-start gap-2.5 text-sm leading-relaxed"><Check className="mt-0.5 size-4 shrink-0 text-primary" />{feature}</li>)}
+          <ul className="mb-4 space-y-2 sm:mb-8 sm:space-y-3">
+            {plusFeatures.map((feature) => <li key={feature} className="flex items-start gap-2.5 text-xs leading-5 sm:text-sm sm:leading-relaxed"><Check className="mt-0.5 size-4 shrink-0 text-primary" />{feature}</li>)}
           </ul>
           <Button
             disabled={active || busy || membership.isPending || !!membership.error || (!scriptReady && !checkout.awaitingVerification)}
             onClick={startCheckout}
-            className="bg-brand mt-auto h-12 w-full cursor-pointer gap-2 rounded-xl font-semibold text-white shadow-lg shadow-cyan-500/20 hover:opacity-90"
+            className="bg-brand mt-auto h-11 w-full sm:h-12 cursor-pointer gap-2 rounded-xl font-semibold text-white shadow-lg shadow-cyan-500/20 hover:opacity-90"
           >
             {busy ? <Loader2 className="size-4 animate-spin" /> : active ? <BadgeCheck className="size-4" /> : <ArrowRight className="size-4" />}
             {busy ? "Completing demo checkout…" : active ? "Plus is active" : checkout.awaitingVerification ? "Retry badge activation" : "Try demo checkout"}
@@ -113,20 +113,20 @@ export default function MembershipPage() {
           <p className="mt-3 text-center text-xs leading-relaxed text-muted-foreground">{scriptError ? "Checkout couldn’t load. Refresh this page to try again." : "Razorpay test mode. No real payment required."}</p>
         </section>
 
-        <section className="flex flex-col rounded-[2rem] border bg-white/55 p-6 sm:p-8">
-          <div className="mb-6 flex items-center justify-between gap-3">
+        <section className="flex flex-col rounded-[2rem] border bg-white/55 p-4 sm:p-8">
+          <div className="mb-4 flex items-center sm:mb-6 justify-between gap-3">
             <span className="flex size-12 items-center justify-center rounded-2xl border bg-white text-muted-foreground"><Video className="size-6" /></span>
             <span className="rounded-full border bg-white/80 px-3 py-1 text-xs font-semibold text-muted-foreground">Coming soon</span>
           </div>
-          <h2 className="text-2xl font-bold">Pro</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">Pro</h2>
           <p className="mt-2 text-sm text-muted-foreground">Take the conversation beyond text.</p>
-          <div className="mt-6"><p className="text-3xl font-bold tracking-tight">Meet. Build. Together.</p><p className="mt-2 text-xs text-muted-foreground">Pricing will be announced at launch.</p></div>
+          <div className="mt-4 sm:mt-6"><p className="text-2xl font-bold tracking-tight sm:text-3xl">Meet. Build. Together.</p><p className="mt-2 text-xs text-muted-foreground">Pricing will be announced at launch.</p></div>
 
-          <div className="my-6 flex min-h-20 items-center justify-center gap-3 rounded-2xl border border-dashed bg-white/50 p-4 text-muted-foreground"><Video className="size-7" /><span className="text-sm font-medium">Your next collaboration, face to face.</span></div>
-          <ul className="mb-8 space-y-3">
-            {proFeatures.map((feature) => <li key={feature} className="flex items-start gap-2.5 text-sm leading-relaxed text-muted-foreground"><Check className="mt-0.5 size-4 shrink-0" />{feature}</li>)}
+          <div className="my-4 flex sm:my-6 min-h-20 items-center justify-center gap-3 rounded-2xl border border-dashed bg-white/50 p-4 text-muted-foreground"><Video className="size-7" /><span className="text-sm font-medium">Your next collaboration, face to face.</span></div>
+          <ul className="mb-4 space-y-2 sm:mb-8 sm:space-y-3">
+            {proFeatures.map((feature) => <li key={feature} className="flex items-start gap-2.5 text-xs leading-5 sm:text-sm sm:leading-relaxed text-muted-foreground"><Check className="mt-0.5 size-4 shrink-0" />{feature}</li>)}
           </ul>
-          <Button disabled variant="outline" className="mt-auto h-12 w-full gap-2 rounded-xl font-semibold"><Video className="size-4" />Video calling · Coming soon</Button>
+          <Button disabled variant="outline" className="mt-auto h-11 w-full sm:h-12 gap-2 rounded-xl font-semibold"><Video className="size-4" />Video calling · Coming soon</Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">Pro isn’t available to purchase yet.</p>
         </section>
       </div>

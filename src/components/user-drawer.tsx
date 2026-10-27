@@ -43,8 +43,8 @@ export function UserDrawer({ user, onClose, footer }: UserDrawerProps) {
       <SheetContent className="w-full gap-0 bg-background p-0 sm:max-w-md" showCloseButton>
         {user && (
           <>
-            <div className="scroll-thin flex-1 space-y-6 overflow-y-auto p-5">
-              <div className="aspect-square w-full overflow-hidden rounded-3xl">
+            <div className="scroll-thin flex-1 space-y-4 overflow-y-auto p-4 sm:space-y-6 sm:p-5">
+              <div className="aspect-video w-full overflow-hidden rounded-2xl sm:aspect-square sm:rounded-3xl">
                 {user.profileImageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -61,7 +61,7 @@ export function UserDrawer({ user, onClose, footer }: UserDrawerProps) {
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center gap-2"><SheetTitle className="min-w-0 break-words text-2xl font-bold">{user.name}</SheetTitle>{user.premiumStatus && <PremiumBadge className="[&_svg]:size-6" />}</div>
+                <div className="flex items-center gap-2"><SheetTitle className="min-w-0 break-words text-xl font-bold sm:text-2xl">{user.name}</SheetTitle>{user.premiumStatus && <PremiumBadge className="[&_svg]:size-5 sm:[&_svg]:size-6" />}</div>
                 <div className="flex flex-wrap gap-2">
                   {user.experienceLevel && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground">

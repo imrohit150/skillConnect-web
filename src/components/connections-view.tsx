@@ -52,7 +52,7 @@ export default function ConnectionsView() {
         type="button"
         disabled={remove.isPending || startConversation.isPending}
         onClick={() => setConnectionToRemove(connection)}
-        className="flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white/80 text-sm font-semibold text-muted-foreground transition hover:bg-white hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white/80 text-xs font-semibold sm:text-sm text-muted-foreground transition hover:bg-white hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
       >
         {remove.isPending ? <Loader2 className="size-4 animate-spin" /> : <UserMinus className="size-4" />}
         Remove
@@ -73,7 +73,7 @@ export default function ConnectionsView() {
           },
           onError: (e) => toast.error(e.message),
         })}
-        className="bg-brand flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-sm font-semibold text-white shadow-md shadow-cyan-500/25 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-brand flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-xs font-semibold sm:text-sm text-white shadow-md shadow-cyan-500/25 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {opening ? <Loader2 className="size-4 animate-spin" /> : <MessageCircle className="size-4" />}
         {opening ? "Opening..." : "Message"}
@@ -82,10 +82,10 @@ export default function ConnectionsView() {
   }
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col gap-6">
+    <div className="flex h-full min-h-0 w-full flex-col gap-3 sm:gap-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Connections</h1>
-        <p className="mt-1.5 text-muted-foreground">Developers you are connected with.</p>
+        <h1 className="text-xl font-bold tracking-tight sm:text-3xl">Connections</h1>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground sm:mt-1.5 sm:text-base sm:leading-6">Developers you are connected with.</p>
       </div>
 
       <div className="scroll-thin -mx-2 flex min-h-0 flex-1 flex-col overflow-y-auto px-2 pb-2">
@@ -103,7 +103,7 @@ export default function ConnectionsView() {
             action={
               <Link
                 href="/feed"
-                className="bg-brand inline-flex h-11 items-center gap-2 rounded-xl px-6 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5"
+                className="bg-brand inline-flex h-10 items-center gap-2 rounded-xl px-4 text-xs sm:h-11 sm:px-6 sm:text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5"
               >
                 <Compass className="size-4" />
                 Discover developers
@@ -111,7 +111,7 @@ export default function ConnectionsView() {
             }
           />
         ) : (
-          <div className="grid gap-5 sm:grid-cols-3 2xl:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-3 sm:gap-5 2xl:grid-cols-4">
             {data.map((connection) => (
               <RequestCard
                 key={connection.connectionId}

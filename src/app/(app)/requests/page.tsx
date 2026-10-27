@@ -21,13 +21,13 @@ import { cn } from "@/lib/utils";
 type Tab = "received" | "sent" | "passed";
 
 const outlineBtn =
-  "flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white/80 text-sm font-semibold transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50";
+  "flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white/80 text-xs font-semibold sm:text-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50";
 
 function DiscoverLink() {
   return (
     <Link
       href="/feed"
-      className="bg-brand inline-flex h-11 items-center gap-2 rounded-xl px-6 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5"
+      className="bg-brand inline-flex h-10 items-center gap-2 rounded-xl px-4 text-xs sm:h-11 sm:px-6 sm:text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5"
     >
       <Compass className="size-4" />
       Discover developers
@@ -78,7 +78,7 @@ function ReceivedList() {
             onError: (e) => toast.error(e.message),
           })
         }
-        className="bg-brand flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-sm font-semibold text-white shadow-md shadow-cyan-500/25 transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-brand flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-xs font-semibold sm:text-sm text-white shadow-md shadow-cyan-500/25 transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Check className="size-4" />
         Accept
@@ -102,7 +102,7 @@ function ReceivedList() {
 
   return (
     <>
-      <div className="grid gap-5 sm:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-3 sm:gap-5 2xl:grid-cols-4">
         {data.map((request) => (
           <RequestCard key={request._id} user={request.senderId} onOpen={() => setSelectedId(request._id)}>
             {actions(request)}
@@ -159,7 +159,7 @@ function SentList() {
 
   return (
     <>
-      <div className="grid gap-5 sm:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-3 sm:gap-5 2xl:grid-cols-4">
         {data.map((request) => (
           <RequestCard key={request._id} user={request.recipientId} onOpen={() => setSelectedId(request._id)}>
             {actions(request)}
@@ -216,7 +216,7 @@ function PassedList() {
 
   return (
     <>
-      <div className="grid gap-5 sm:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-3 sm:gap-5 2xl:grid-cols-4">
         {data.map((item) => (
           <RequestCard key={item._id} user={item.passedUserId} onOpen={() => setSelectedId(item._id)}>
             {actions(item)}
@@ -245,10 +245,10 @@ export default function RequestsPage() {
   ];
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col gap-6">
+    <div className="flex h-full min-h-0 w-full flex-col gap-3 sm:gap-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Requests</h1>
-        <p className="mt-1.5 text-muted-foreground">
+        <h1 className="text-xl font-bold tracking-tight sm:text-3xl">Requests</h1>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground sm:mt-1.5 sm:text-base sm:leading-6">
           Accept developers who want to connect, manage the requests you sent, or bring back people you passed.
         </p>
       </div>
@@ -260,7 +260,7 @@ export default function RequestsPage() {
             type="button"
             onClick={() => setTab(id)}
             className={cn(
-              "flex cursor-pointer items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-muted-foreground transition",
+              "flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold sm:gap-2 sm:px-5 sm:text-sm text-muted-foreground transition",
               tab === id && "bg-brand text-white shadow-md shadow-cyan-500/25",
             )}
           >

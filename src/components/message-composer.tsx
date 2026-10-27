@@ -61,11 +61,11 @@ export function MessageComposer({ canSend, otherUserName, onSend }: MessageCompo
           onChange={(event) => { setDraft(event.target.value); setError(null); }}
           onKeyDown={onKeyDown}
           readOnly={isSending}
-          rows={2}
+          rows={1}
           maxLength={2000}
           aria-describedby={`${inputId}-help${error ? ` ${inputId}-error` : ""}`}
           placeholder={`Message ${otherUserName}…`}
-          className="scroll-thin max-h-40 min-h-16 min-w-0 flex-1 resize-none bg-transparent px-2 py-1.5 text-sm leading-relaxed outline-none placeholder:text-muted-foreground/70"
+          className="scroll-thin max-h-40 min-h-11 min-w-0 flex-1 resize-none bg-transparent px-2 py-1.5 text-base leading-relaxed outline-none placeholder:text-muted-foreground/70 sm:min-h-16 sm:text-sm"
         />
         <Button
           type="submit"

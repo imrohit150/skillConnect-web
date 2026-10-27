@@ -15,17 +15,18 @@ type DateOfBirthPickerProps = {
   onBlur: () => void;
   triggerRef: Ref<HTMLButtonElement>;
   error?: string;
+  compact?: boolean;
 };
 
-export function DateOfBirthPicker({ value, onChange, onBlur, triggerRef, error }: DateOfBirthPickerProps) {
+export function DateOfBirthPicker({ value, onChange, onBlur, triggerRef, error, compact = false }: DateOfBirthPickerProps) {
   const [open, setOpen] = useState(false);
   const selected = value ? parseISO(value) : undefined;
   const latestBirthday = subYears(startOfDay(new Date()), 18);
   const earliestBirthday = new Date(1900, 0, 1);
 
   return (
-    <div className="space-y-1.5">
-      <Label htmlFor="dateOfBirth" className="text-[13px] font-semibold">Date of birth</Label>
+    <div className={cn("space-y-1.5", compact && "max-sm:space-y-0.5")}>
+      <Label htmlFor="dateOfBirth" className={cn("text-[13px] font-semibold", compact && "max-sm:text-xs max-sm:leading-4")}>Date of birth</Label>
       <Popover
         open={open}
         onOpenChange={(nextOpen) => {
@@ -46,6 +47,7 @@ export function DateOfBirthPicker({ value, onChange, onBlur, triggerRef, error }
                 "h-12 w-full cursor-pointer justify-start gap-2.5 rounded-xl border-input bg-white/80 px-3.5 text-left font-normal shadow-sm hover:bg-white focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/15",
                 !value && "text-muted-foreground",
                 open && "border-primary ring-4 ring-primary/15",
+                compact && "max-sm:h-11",
               )}
             />
           }
@@ -96,7 +98,7 @@ export function DateOfBirthPicker({ value, onChange, onBlur, triggerRef, error }
           <p className="border-t bg-background/40 px-4 py-3 text-xs text-muted-foreground">You must be at least 18 years old to join.</p>
         </PopoverContent>
       </Popover>
-      <p id="dateOfBirth-help" className={cn("text-xs", error ? "text-destructive" : "text-muted-foreground")}>
+      <p id="dateOfBirth-help" className={cn("text-xs", compact && "max-sm:text-[11px] max-sm:leading-4", error ? "text-destructive" : "text-muted-foreground")}>
         {error || "You must be at least 18 years old."}
       </p>
     </div>

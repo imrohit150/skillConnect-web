@@ -29,7 +29,7 @@ export function UserActions({ user, onDone }: UserActionsProps) {
             onError: (e) => toast.error(e.message),
           })
         }
-        className="bg-brand flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white shadow-md shadow-cyan-500/25 transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-brand flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl text-xs font-semibold sm:text-sm text-white shadow-md shadow-cyan-500/25 transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {send.isPending ? <Loader2 className="size-4 animate-spin" /> : <UserPlus className="size-4" />}
         Connect
@@ -43,7 +43,7 @@ export function UserActions({ user, onDone }: UserActionsProps) {
             onError: (e) => toast.error(e.message),
           })
         }
-        className="flex h-11 cursor-pointer items-center justify-center rounded-xl border bg-white/80 px-5 text-sm font-semibold text-muted-foreground transition hover:bg-white hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-11 cursor-pointer items-center justify-center rounded-xl border bg-white/80 px-3 text-xs font-semibold text-muted-foreground transition hover:bg-white hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 sm:px-5 sm:text-sm"
       >
         {pass.isPending ? <Loader2 className="size-4 animate-spin" /> : "Pass"}
       </button>

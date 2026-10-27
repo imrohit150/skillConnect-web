@@ -30,7 +30,7 @@ export function ConversationItem({ conversation, currentUserId, selected = false
         scroll={false}
         aria-current={selected ? "page" : undefined}
         className={cn(
-          "flex items-center gap-3 border-l-[3px] border-transparent p-4 transition hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary sm:gap-4 sm:p-5",
+          "flex items-center gap-2.5 border-l-[3px] border-transparent p-3 transition hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary sm:gap-4 sm:p-5",
           selected && "border-primary bg-accent/80",
         )}
       >
@@ -40,16 +40,16 @@ export function ConversationItem({ conversation, currentUserId, selected = false
           src={user.profileImageUrl}
           alt=""
           referrerPolicy="no-referrer"
-          className="size-12 shrink-0 rounded-2xl border-2 border-white object-cover shadow-sm ring-1 ring-primary/15 sm:size-14"
+          className="size-10 shrink-0 rounded-xl border-2 border-white object-cover shadow-sm ring-1 ring-primary/15 sm:size-14 sm:rounded-2xl"
         />
       ) : (
-        <span className="bg-brand flex size-12 shrink-0 items-center justify-center rounded-2xl text-xl font-bold text-white shadow-sm sm:size-14">
+        <span className="bg-brand flex size-10 shrink-0 items-center justify-center rounded-xl text-base font-bold text-white shadow-sm sm:size-14 sm:rounded-2xl sm:text-xl">
           {user.name.charAt(0).toUpperCase()}
         </span>
       )}
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-3">
-          <span className="flex min-w-0 items-center gap-1"><h3 className="truncate font-semibold">{user.name}</h3>{user.premiumStatus && <PremiumBadge />}</span>
+          <span className="flex min-w-0 items-center gap-1"><h3 className="truncate text-sm font-semibold sm:text-base">{user.name}</h3>{user.premiumStatus && <PremiumBadge />}</span>
           <time
             dateTime={lastActivityAt}
             title={new Date(lastActivityAt).toLocaleString("en-IN")}
@@ -58,7 +58,7 @@ export function ConversationItem({ conversation, currentUserId, selected = false
             {formatActivityTime(lastActivityAt)}
           </time>
         </div>
-        <p className="mt-1 truncate text-sm text-muted-foreground">{preview}</p>
+        <p className="mt-1 truncate text-xs text-muted-foreground sm:text-sm">{preview}</p>
       </div>
       </Link>
     </li>

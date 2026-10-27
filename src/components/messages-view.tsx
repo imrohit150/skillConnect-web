@@ -22,20 +22,21 @@ function MessagesContent() {
   const chat = useChatSocket(selected?.conversationId ?? null);
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Messages</h1>
-          <p className="mt-1.5 text-muted-foreground">Your conversations, all in one place.</p>
+    <div className="flex h-full min-h-0 w-full flex-col gap-3 sm:gap-6">
+      <div className={cn("flex items-start justify-between gap-3 sm:flex-wrap sm:items-center sm:gap-4", conversationId && "hidden md:flex")}>
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold tracking-tight sm:text-3xl">Messages</h1>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground sm:mt-1.5 sm:text-base sm:leading-6">Your conversations, all in one place.</p>
         </div>
         <Button
           variant="outline"
+          aria-label={isFetching ? "Refreshing inbox" : "Refresh inbox"}
           disabled={isFetching}
           onClick={() => refetch()}
-          className="h-10 cursor-pointer gap-2 rounded-xl bg-white/80 px-4 font-semibold shadow-sm"
+          className="h-10 w-10 shrink-0 cursor-pointer gap-2 rounded-xl bg-white/80 p-0 font-semibold shadow-sm sm:w-auto sm:px-4"
         >
           <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
-          {isFetching ? "Refreshing…" : "Refresh inbox"}
+          <span className="hidden sm:inline">{isFetching ? "Refreshing…" : "Refresh inbox"}</span>
         </Button>
       </div>
 
@@ -47,10 +48,10 @@ function MessagesContent() {
 
       <div className="grid min-h-0 flex-1 grid-cols-1 gap-5 md:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)]">
       <section aria-label="Conversation inbox" className={cn("glass flex min-h-0 flex-col overflow-hidden rounded-3xl border bg-white/75", conversationId && "hidden md:flex")}>
-        <div className="flex shrink-0 items-center gap-3 border-b bg-white/50 px-5 py-4 sm:px-6">
-          <span className="flex size-10 items-center justify-center rounded-xl bg-accent text-primary"><MessageCircle className="size-5" /></span>
+        <div className="flex shrink-0 items-center gap-2 border-b bg-white/50 px-3 py-2.5 sm:gap-3 sm:px-6 sm:py-4">
+          <span className="flex size-8 items-center justify-center rounded-xl bg-accent text-primary sm:size-10"><MessageCircle className="size-4 sm:size-5" /></span>
           <div className="flex flex-1 flex-wrap items-center gap-2">
-            <h2 className="font-semibold">Your conversations</h2>
+            <h2 className="text-sm font-semibold sm:text-base">Your conversations</h2>
             {conversations && (
               <span className="rounded-full border bg-white px-2 py-0.5 text-xs font-semibold text-muted-foreground">{conversations.length}</span>
             )}

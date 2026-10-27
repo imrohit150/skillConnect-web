@@ -12,6 +12,7 @@ type AuthFieldProps = React.ComponentProps<"input"> & {
   error?: string;
   hint?: string;
   required?: boolean;
+  compact?: boolean;
 };
 
 export function AuthField({
@@ -20,6 +21,7 @@ export function AuthField({
   error,
   hint,
   required,
+  compact = false,
   id,
   type,
   className,
@@ -29,8 +31,8 @@ export function AuthField({
   const isPassword = type === "password";
 
   return (
-    <div className="space-y-1.5">
-      <Label htmlFor={id} className="text-[13px] font-semibold">
+    <div className={cn("space-y-1.5", compact && "max-sm:space-y-0.5")}>
+      <Label htmlFor={id} className={cn("text-[13px] font-semibold", compact && "max-sm:text-xs max-sm:leading-4")}>
         {label}
         {required && <span className="text-destructive">*</span>}
       </Label>
@@ -43,6 +45,7 @@ export function AuthField({
           className={cn(
             "h-12 rounded-xl bg-white/80 pr-4 pl-10 shadow-sm focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/15",
             isPassword && "pr-16",
+            compact && "max-sm:h-11",
             className,
           )}
           {...props}

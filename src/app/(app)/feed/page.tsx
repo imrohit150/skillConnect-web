@@ -67,22 +67,23 @@ function FeedContent() {
   }
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col gap-6">
+    <div className="flex h-full min-h-0 w-full flex-col gap-3 sm:gap-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Discover developers</h1>
-        <p className="mt-1.5 text-muted-foreground">
+        <h1 className="text-xl font-bold tracking-tight sm:text-3xl">Discover developers</h1>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground sm:mt-1.5 sm:text-base sm:leading-6">
           Find people to build with. Open a card to see their full profile.
         </p>
       </div>
 
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+      <div className="flex shrink-0 flex-col gap-2 sm:gap-3 lg:flex-row lg:items-center">
         <div className="relative w-full lg:max-w-md">
           <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <input
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Search by name or skill..."
-            className="h-11 w-full rounded-xl border bg-white/80 pr-10 pl-10 text-sm shadow-sm outline-none transition placeholder:text-muted-foreground/70 focus:border-primary focus:ring-4 focus:ring-primary/15"
+            aria-label="Search developers"
+            className="h-10 w-full rounded-xl border bg-white/80 pr-10 pl-10 text-base shadow-sm outline-none transition placeholder:text-muted-foreground/70 focus:border-primary focus:ring-4 focus:ring-primary/15 sm:h-11 sm:text-sm"
           />
           {text && (
             <button
@@ -95,14 +96,14 @@ function FeedContent() {
             </button>
           )}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {levels.map((item) => (
             <button
               key={item}
               type="button"
               onClick={() => updateParams({ level: level === item ? "" : item })}
               className={cn(
-                "cursor-pointer rounded-full border bg-white/70 px-4 py-2 text-sm font-semibold text-muted-foreground transition hover:text-foreground",
+                "min-h-9 cursor-pointer rounded-full border bg-white/70 px-3 py-1.5 text-xs font-semibold text-muted-foreground transition hover:text-foreground sm:px-4 sm:py-2 sm:text-sm",
                 level === item && "bg-brand border-transparent text-white shadow-md shadow-cyan-500/25 hover:text-white",
               )}
             >
@@ -122,7 +123,7 @@ function FeedContent() {
         </div>
       </div>
 
-      <div className="scroll-thin -mx-2 flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-2 pb-2">
+      <div className="scroll-thin -mx-2 flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-2 pb-2 sm:gap-6">
       {isPending ? (
         <div className="grid gap-5 sm:grid-cols-3 2xl:grid-cols-4">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -141,7 +142,7 @@ function FeedContent() {
               <button
                 type="button"
                 onClick={clearFilters}
-                className="bg-brand h-11 cursor-pointer rounded-xl px-6 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5"
+                className="bg-brand h-10 cursor-pointer rounded-xl px-4 text-xs font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 sm:h-11 sm:px-6 sm:text-sm"
               >
                 Clear filters
               </button>
@@ -170,7 +171,7 @@ function FeedContent() {
                 type="button"
                 disabled={isFetchingNextPage}
                 onClick={() => fetchNextPage()}
-                className="bg-brand group flex h-12 cursor-pointer items-center gap-2 rounded-full px-8 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
+                className="bg-brand group flex h-10 cursor-pointer items-center gap-2 rounded-full px-5 text-xs font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60 sm:h-12 sm:px-8 sm:text-sm"
               >
                 {isFetchingNextPage ? (
                   <Loader2 className="size-4 animate-spin" />

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "@/components/logo";
 import { useCurrentUser } from "@/hooks/use-auth";
+import { cn } from "@/lib/utils";
 
 const people = [
   { initials: "AK", color: "from-cyan-400 to-sky-500" },
@@ -15,6 +16,7 @@ const people = [
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const isSignup = pathname === "/signup";
   const { data: user } = useCurrentUser();
 
   useEffect(() => {
@@ -70,8 +72,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
         </aside>
 
-        <main className="flex flex-col justify-center gap-6 bg-white/70 p-6 sm:p-10">
-          <Logo href="/login" className="lg:hidden" />
+        <main className={cn("flex flex-col justify-center gap-6 bg-white/70 p-6 sm:p-10", isSignup && "max-sm:gap-2.5 max-sm:px-5 max-sm:py-3")}>
+          <Logo href="/login" className={cn("lg:hidden", isSignup && "max-sm:[&>span:first-child]:size-8 max-sm:[&>span:first-child]:rounded-lg max-sm:[&>span:first-child]:text-base max-sm:[&>span:last-child]:text-lg")} />
           {children}
         </main>
       </div>
