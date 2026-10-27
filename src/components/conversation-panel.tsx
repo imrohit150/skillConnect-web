@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AlertCircle, ArrowLeft, Loader2, MessageCircle } from "lucide-react";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
-import { ConversationHistory } from "@/components/conversation-history";
+import { ConversationSession } from "@/components/conversation-session";
 import type { ConversationSummary } from "@/types";
 
 type ConversationPanelProps = {
@@ -53,7 +53,7 @@ export function ConversationPanel({ conversationId, conversation, currentUserId,
             action={error ? <Button onClick={onRetry} variant="outline" className="h-10 cursor-pointer rounded-xl px-5">Try again</Button> : <Link href="/connections" className="text-sm font-semibold text-primary hover:underline">View connections</Link>}
           />
         ) : (
-          <ConversationHistory key={conversationId} conversationId={conversationId} currentUserId={currentUserId} otherUserName={conversation.user.name} />
+          <ConversationSession key={conversationId} conversationId={conversationId} currentUserId={currentUserId} otherUserName={conversation.user.name} />
         )}
       </div>
     </>

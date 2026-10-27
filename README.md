@@ -12,6 +12,10 @@ npm run dev
 
 The app runs on http://localhost:3000. Start the backend first and set `CLIENT_URL=http://localhost:3000` in its `.env`.
 
+Set `NEXT_PUBLIC_SOCKET_URL` to the backend origin (for example, `http://localhost:5000`), without `/api/v1`. Opening a conversation starts a cookie-authenticated Socket.IO connection; “Chat connected” means the backend confirmed access to that conversation's room. Leaving the conversation disconnects it. Saved messages load separately through the REST API.
+
+In a connected chat, use Enter to send and Shift+Enter for a new line (up to 2000 characters). Messages and inbox previews update live. Failed sends preserve the draft; if delivery cannot be confirmed, check the conversation before trying again because the backend may already have saved the message.
+
 See [BUILD-LOG.md](./BUILD-LOG.md) for progress.
 
 ## Demo membership

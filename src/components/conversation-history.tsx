@@ -26,15 +26,29 @@ export function ConversationHistory({ conversationId, currentUserId, otherUserNa
   const { data, isPending, error, isFetching, refetch } = useMessages(conversationId);
   const viewportRef = useRef<HTMLDivElement>(null);
   const hasScrolledInitially = useRef(false);
+  const nearBottomRef = useRef(true);
+  const lastMessageIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (!data || !viewportRef.current || hasScrolledInitially.current) return;
-    viewportRef.current.scrollTop = viewportRef.current.scrollHeight;
+    if (!data || !viewportRef.current) return;
+    const lastMessage = data.messages.at(-1);
+    const sentNewMessage = lastMessage?._id !== lastMessageIdRef.current && lastMessage?.senderId === currentUserId;
+    if (!hasScrolledInitially.current || nearBottomRef.current || sentNewMessage) {
+      viewportRef.current.scrollTop = viewportRef.current.scrollHeight;
+    }
+    lastMessageIdRef.current = lastMessage?._id;
     hasScrolledInitially.current = true;
-  }, [data]);
+  }, [data, currentUserId]);
 
   return (
-    <div ref={viewportRef} className="scroll-thin flex min-h-0 flex-1 flex-col overflow-y-auto">
+    <div
+      ref={viewportRef}
+      onScroll={(event) => {
+        const viewport = event.currentTarget;
+        nearBottomRef.current = viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight < 80;
+      }}
+      className="scroll-thin flex min-h-0 flex-1 flex-col overflow-y-auto"
+    >
       {isPending ? (
         <div role="status" className="flex flex-1 items-center justify-center gap-2 p-6 text-sm text-muted-foreground">
           <Loader2 className="size-5 animate-spin" />Loading messages…
