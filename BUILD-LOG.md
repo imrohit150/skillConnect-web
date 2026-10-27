@@ -73,6 +73,8 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 
 45. Compacted mobile signup while keeping the same rounded card and outer margins as Login. Reduced the mobile heading, supporting text, labels, form gaps, logo and card padding; signup inputs and submit button remain 44px tall. Added opt-in compact styling to AuthField and DateOfBirthPicker so other forms keep their existing spacing. Input text stays 16px on phones. Inspected local Chrome screenshots at 375x667, 360x640 and 390x844: the whole signup card, submit button and login link fit without horizontal/vertical page overflow. Also checked the desktop layout and that the birthday popup opens below its trigger. TypeScript/lint passed. No dependencies, scripts, backend changes or production build.
 
+46. Seeded five verified demo developer profiles through the backend's `scripts/seed-demo-users.js`; they can appear in Discover and be used for requests/connections/chat through normal app actions. They include embedded SVG avatars, bios, skills and varied experience levels. Demo email/password details and safe rerun instructions are in `../skillConnect-backend/scripts/README.md`. No frontend code, dependencies, tests or build were needed for this data step.
+
 ## Setup notes
 
 - Copy `.env.example` to `.env.local`.
@@ -83,6 +85,6 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 - Test signup OTP email delivery end to end with the backend and configured Resend sender.
 - Verify old-session rejection against the live backend before final demo-data setup.
 - Test the complete Razorpay test Checkout and webhook flow end to end.
-- Demo data and deployment configuration.
+- Deployment configuration; optionally add example requests/conversations between the seeded demo developers.
 
 
