@@ -6,10 +6,13 @@ export const API_ROUTES = {
   },
   auth: {
     signup: "/auth/signup",
+    pendingSignup: "/auth/signup/pending",
     login: "/auth/login",
     logout: "/auth/logout",
     refresh: "/auth/refresh",
     me: "/auth/me",
+    verifyEmail: "/auth/email-verification/verify",
+    resendVerification: "/auth/email-verification/resend",
   },
   profile: {
     me: "/profile/me",

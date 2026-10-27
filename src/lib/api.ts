@@ -4,9 +4,15 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api/v1
 
 export class ApiError extends Error {
   status: number;
-  constructor(message: string, status: number) {
+  code?: string;
+  retryAfter?: number;
+  attemptsRemaining?: number;
+  constructor(message: string, status: number, details: { code?: string; retryAfter?: number; attemptsRemaining?: number } = {}) {
     super(message);
     this.status = status;
+    this.code = details.code;
+    this.retryAfter = details.retryAfter;
+    this.attemptsRemaining = details.attemptsRemaining;
   }
 }
 
@@ -37,6 +43,9 @@ async function request(path: string, init: RequestInit): Promise<Response> {
 const NO_REFRESH_PATHS: string[] = [
   API_ROUTES.auth.login,
   API_ROUTES.auth.signup,
+  API_ROUTES.auth.pendingSignup,
+  API_ROUTES.auth.verifyEmail,
+  API_ROUTES.auth.resendVerification,
   API_ROUTES.auth.refresh,
 ];
 
@@ -51,7 +60,12 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
 
   const body = await res.json().catch(() => null);
   if (!res.ok) {
-    throw new ApiError(body?.message ?? "Something went wrong", res.status);
+    const retryAfterHeader = Number(res.headers.get("Retry-After"));
+    throw new ApiError(body?.message ?? "Something went wrong", res.status, {
+      code: body?.code,
+      attemptsRemaining: body?.attemptsRemaining,
+      retryAfter: body?.retryAfter ?? (retryAfterHeader > 0 ? retryAfterHeader : undefined),
+    });
   }
   return body as T;
 }

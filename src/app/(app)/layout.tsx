@@ -14,7 +14,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const { data: user, error, isPending } = useCurrentUser();
-  const { data: profile, isPending: profilePending } = useMyProfile();
+  const { data: profile, isPending: profilePending } = useMyProfile(user?.isEmailVerified === true);
   const logout = useLogout();
   const locked = Boolean(profile) && !isProfileComplete(profile!);
 
@@ -25,10 +25,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [error, router]);
 
   useEffect(() => {
-    if (locked && pathname !== "/profile") router.replace("/profile");
-  }, [locked, pathname, router]);
+    if (user && !user.isEmailVerified) router.replace("/signup");
+    else if (user?.isEmailVerified && locked && pathname !== "/profile") router.replace("/profile");
+  }, [user, locked, pathname, router]);
 
-  if (isPending || (user && profilePending)) {
+  if (isPending || (user && !user.isEmailVerified) || (user?.isEmailVerified && profilePending)) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />

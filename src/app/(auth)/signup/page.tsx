@@ -30,7 +30,7 @@ export default function SignupPage() {
     signup.mutate(
       { name, email, password, dateOfBirth },
       {
-        onSuccess: () => router.replace("/profile?welcome=1"),
+        onSuccess: () => router.replace("/verify-email"),
         onError: (error) => toast.error(error.message),
       },
     );
@@ -112,10 +112,12 @@ export default function SignupPage() {
           disabled={!isValid || signup.isPending}
           className="bg-brand flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
-          {signup.isPending ? "Creating account..." : "Create free account"}
+          {signup.isPending ? "Sending verification code..." : "Continue with email"}
           {!signup.isPending && <ArrowRight className="size-4" />}
         </button>
       </form>
+
+      <p className="-mt-2 text-center text-xs leading-relaxed text-muted-foreground">We&apos;ll email you a verification code. Your account is created only after you verify your email.</p>
 
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}

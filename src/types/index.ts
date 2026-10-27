@@ -7,6 +7,18 @@ export type User = {
   skills?: string[];
   profileImageUrl?: string;
   premiumStatus?: boolean;
+  isEmailVerified: boolean;
+  emailVerifiedAt?: string | null;
+};
+
+export type PendingSignup = { email: string; expiresAt: string; emailVerification: EmailVerificationState };
+
+export type EmailVerificationState = {
+  status: "not_sent" | "sent" | "expired" | "locked";
+  expiresAt: string | null;
+  resendAvailableAt: string | null;
+  attemptsRemaining: number;
+  message?: string;
 };
 
 export type Membership = {

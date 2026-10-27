@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "@/components/logo";
 import { useCurrentUser } from "@/hooks/use-auth";
 
@@ -14,11 +14,13 @@ const people = [
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: user } = useCurrentUser();
 
   useEffect(() => {
-    if (user) router.replace("/feed");
-  }, [user, router]);
+    if (!user) return;
+    if (user.isEmailVerified) router.replace(pathname === "/verify-email" ? "/profile?welcome=1" : "/feed");
+  }, [user, pathname, router]);
 
   return (
     <div className="flex flex-1 items-center justify-center p-4 sm:p-8">

@@ -1,5 +1,6 @@
 import { test, expect, type APIResponse } from "@playwright/test";
 import { EventEmitter } from "node:events";
+import { io } from "socket.io-client";
 import { connectChat, type ChatSocket, type ChatConnectionState } from "../../src/lib/socket";
 import { appendLiveMessage, mergeLatestPage, mergeMessages, updateConversationPreview, type CachedMessagePage } from "../../src/lib/chat-cache";
 import type { Message, MessageHistoryPage } from "../../src/types";
@@ -9,6 +10,22 @@ const chatId = "aaaaaaaaaaaaaaaaaaaaaaaa";
 const flush = () => new Promise<void>((resolve) => setImmediate(resolve));
 function deferred<T>() { let resolve!: (value: T) => void; let reject!: (reason: Error) => void; const promise = new Promise<T>((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; }
 const message = (id: string, time = "2026-10-27T10:00:00.000Z"): Message => ({ _id: id, conversationId: chatId, senderId: "user", content: "Hello", createdAt: time, updatedAt: time });
+
+test("chat rejects an authenticated account whose email is not verified", async ({ request }) => {
+  await request.post(`${api}/__test/reset`);
+  await request.post(`${api}/__test/login`, { data: { user: "a" } });
+  await request.post(`${api}/__test/control`, { data: { unverify: "a" } });
+  const token = (await request.storageState()).cookies.find((cookie) => cookie.name === "accessToken")!.value;
+  const socket = io(api, { autoConnect: false, reconnection: false, transports: ["websocket"], extraHeaders: { Cookie: `accessToken=${token}` } });
+  try {
+    const failure = new Promise<Error & { data?: { code?: string } }>((resolve, reject) => {
+      socket.once("connect_error", resolve);
+      socket.once("connect", () => reject(new Error("Unverified user was admitted")));
+    });
+    socket.connect();
+    expect((await failure).data?.code).toBe("EMAIL_NOT_VERIFIED");
+  } finally { socket.disconnect(); await request.post(`${api}/__test/reset`); }
+});
 
 test("stable history cursor visits all messages, including equal timestamps", async ({ request }) => {
   await request.post(`${api}/__test/reset`);

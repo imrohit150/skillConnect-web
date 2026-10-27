@@ -15,9 +15,10 @@ const users = [
   { _id: ids.a, name: "Alex Developer", email: "alex@example.test", premiumStatus: true },
   { _id: ids.b, name: "Blair Developer", email: "blair@example.test", premiumStatus: false },
   { _id: ids.c, name: "Casey Developer", email: "casey@example.test", premiumStatus: false },
-].map((user) => ({ ...user, profileImageUrl: avatar, skills: ["React"] }));
+].map((user) => ({ ...user, isEmailVerified: true, emailVerifiedAt: "2026-10-27T00:00:00.000Z", profileImageUrl: avatar, skills: ["React"] }));
 let messages, conversations, connections, sequence, failOlder, failSend, silentSend;
 function reset() {
+  for (const user of users) user.isEmailVerified = true;
   sequence = 1000; failOlder = 0; failSend = false; silentSend = false;
   const createdAt = new Date(Date.now() - 86400000);
   conversations = [
@@ -96,7 +97,11 @@ mockModule("./src/models/message.model", {
     return row;
   },
 });
-mockModule("./src/models/user.model", { findById: async (id) => users.find((user) => user._id === id) });
+mockModule("./src/models/user.model", { findById: (id) => {
+  const result = Promise.resolve(users.find((user) => user._id === id));
+  result.select = () => result;
+  return result;
+} });
 mockModule("./src/services/email.service", { sendEmail: async () => {} });
 const { getMessages } = backend("./src/controllers/messages.controller");
 const { getConversations, getOrCreateConversation } = backend("./src/controllers/conversations.controller");
@@ -126,6 +131,7 @@ const server = http.createServer(async (request, response) => {
     if (url.pathname === "/__test/login") { const values = await body(request); setSession(response, ids[values.user], values.expired); return response.json({ ok: true }); }
     if (url.pathname === "/__test/control") {
       const values = await body(request);
+      if (values.unverify) users.find((user) => user._id === ids[values.unverify]).isEmailVerified = false;
       if (values.failOlder) failOlder = values.failOlder;
       if (values.failSend) failSend = true;
       if (values.silentSend) silentSend = true;

@@ -5,10 +5,11 @@ import type { ProfileUpdate } from "@/types";
 
 const profileKey = ["profile", "me"] as const;
 
-export function useMyProfile() {
+export function useMyProfile(enabled = true) {
   return useQuery({
     queryKey: profileKey,
     queryFn: profileService.getMyProfile,
+    enabled,
   });
 }
 
