@@ -118,17 +118,22 @@ export type Message = {
 // The inbox only includes these public fields for the other participant.
 export type ConversationSummary = {
   conversationId: string;
-  user: Pick<PublicUser, "_id" | "name" | "profileImageUrl">;
+  user: Pick<PublicUser, "_id" | "name" | "profileImageUrl" | "premiumStatus">;
   lastMessage: Message | null;
   lastActivityAt: string;
+  canMessage: boolean;
 };
+
+export type MessageCursor = { before: string; beforeId: string };
 
 export type MessageHistoryQuery = {
   before?: string;
+  beforeId?: string;
   limit?: number;
 };
 
 export type MessageHistoryPage = {
   messages: Message[];
   hasMore: boolean;
+  nextCursor: MessageCursor | null;
 };

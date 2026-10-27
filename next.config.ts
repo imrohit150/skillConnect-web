@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  distDir: process.env.NEXT_TEST_DIST_DIR || ".next",
+  typescript: {
+    tsconfigPath: process.env.NEXT_TEST_DIST_DIR ? "tsconfig.chat-tests.json" : "tsconfig.json",
+  },
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,

@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next-chat-tests/types/**/*.ts",
+    ".next-chat-tests/dev/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".next"]
+}

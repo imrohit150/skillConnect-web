@@ -1,4 +1,14 @@
-import type { ConversationSummary, Message } from "@/types";
+import type { InfiniteData } from "@tanstack/react-query";
+import type { ConversationSummary, Message, MessageCursor, MessageHistoryPage } from "@/types";
+
+export const messagesKey = ["messages"] as const;
+export const messageHistoryKey = (conversationId: string) => [...messagesKey, conversationId, "history"] as const;
+export type CachedMessagePage = MessageHistoryPage & { loaded: boolean };
+export type MessagesCache = InfiniteData<CachedMessagePage, MessageCursor | null>;
+
+export function compareMessages(a: Message, b: Message) {
+  return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime() || a._id.localeCompare(b._id);
+}
 
 // Both the broadcast and send acknowledgement contain the same saved MongoDB ID.
 export function mergeMessages(...batches: Message[][]): Message[] {
@@ -6,9 +16,22 @@ export function mergeMessages(...batches: Message[][]): Message[] {
   for (const batch of batches) {
     for (const message of batch) unique.set(message._id, message);
   }
-  return [...unique.values()].sort((a, b) =>
-    new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime() || a._id.localeCompare(b._id),
-  );
+  return [...unique.values()].sort(compareMessages);
+}
+
+export function appendLiveMessage(current: MessagesCache | undefined, message: Message): MessagesCache {
+  const first = current?.pages[0] ?? { messages: [], hasMore: false, nextCursor: null, loaded: false };
+  return {
+    pages: [{ ...first, messages: mergeMessages(first.messages, [message]) }, ...(current?.pages.slice(1) ?? [])],
+    pageParams: current?.pageParams ?? [null],
+  };
+}
+
+export function mergeLatestPage(fetched: MessageHistoryPage, cached?: CachedMessagePage): CachedMessagePage {
+  const latest = fetched.messages.at(-1);
+  // Only preserve messages newer than this REST snapshot. Older history is loaded with its cursor.
+  const arrivingDuringFetch = cached?.messages.filter((message) => !latest || compareMessages(message, latest) >= 0) ?? [];
+  return { ...fetched, loaded: true, messages: mergeMessages(fetched.messages, arrivingDuringFetch) };
 }
 
 export function updateConversationPreview(conversations: ConversationSummary[], message: Message): ConversationSummary[] {

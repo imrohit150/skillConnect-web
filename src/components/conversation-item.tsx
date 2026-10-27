@@ -1,6 +1,7 @@
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { PremiumBadge } from "@/components/premium-badge";
 import type { ConversationSummary } from "@/types";
 
 function formatActivityTime(value: string) {
@@ -48,7 +49,7 @@ export function ConversationItem({ conversation, currentUserId, selected = false
       )}
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className="truncate font-semibold">{user.name}</h3>
+          <span className="flex min-w-0 items-center gap-1"><h3 className="truncate font-semibold">{user.name}</h3>{user.premiumStatus && <PremiumBadge />}</span>
           <time
             dateTime={lastActivityAt}
             title={new Date(lastActivityAt).toLocaleString("en-IN")}

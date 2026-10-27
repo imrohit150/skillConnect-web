@@ -12,13 +12,14 @@ export async function getOrCreateConversation(userId: string) {
   })).conversation;
 }
 
-export function getMessages(conversationId: string, { before, limit }: MessageHistoryQuery = {}) {
+export function getMessages(conversationId: string, { before, beforeId, limit }: MessageHistoryQuery = {}, signal?: AbortSignal) {
   const params = new URLSearchParams();
   if (before) params.set("before", before);
+  if (beforeId) params.set("beforeId", beforeId);
   if (limit !== undefined) params.set("limit", String(limit));
 
   const path = API_ROUTES.conversations.messages(conversationId);
   const query = params.toString();
   // Each batch is already oldest-to-newest; `before` requests an older batch.
-  return api<MessageHistoryPage>(query ? `${path}?${query}` : path);
+  return api<MessageHistoryPage>(query ? `${path}?${query}` : path, { signal });
 }

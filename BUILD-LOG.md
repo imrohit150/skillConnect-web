@@ -65,6 +65,8 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 
 41. Fixed the Messages instant-navigation validation error caused by the client auth layout withholding the page during its session check. Moved the interactive UI into `components/messages-view.tsx` (retaining its URL/Suspense handling) and made the route a Server Component wrapper exporting `instant = false`, as required by the installed Next.js route configuration. The opt-out is scoped to Messages.
 
+42. Completed core text chat: migrated history to cursor-based infinite queries, added Load older messages with retry and reading-position preservation, a Beginning of conversation indicator, and a Latest/New messages jump control. Live cache updates retain loaded pages/cursors and deduplicate broadcasts/acknowledgements; REST refreshes retain messages that arrived during the fetch without creating gaps from older snapshots. Messages now uses one socket for the whole inbox, leaves the old room when switching chats, receives background conversations and refreshes unknown/new inbox entries. Added premium badges to chat rows/headers and disabled sending immediately when a connection is removed. The backend now provides stable timestamp-and-ID cursors and per-user authenticated delivery. Added isolated Playwright tests using the real backend history controller/socket handler with in-memory data; all 17 unit/API/browser checks passed, including equal timestamps, older-load failures, scroll position, chat creation, two-user messages, privacy, reloads, session recovery, rejected/unconfirmed sends, removed connections and mobile navigation. Inspected desktop/mobile screenshots. Applied the Messages route-wrapper pattern to Connections after its navigation validation warning appeared during testing. Kept the test dev server's cache/types separate from normal development and excluded generated test output from lint/Git. No production build run.
+
 ## Setup notes
 
 - Copy `.env.example` to `.env.local`.
@@ -72,7 +74,6 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 
 ## Next
 
-- Real-time chat with Socket.IO.
 - Test the complete Razorpay test Checkout and webhook flow end to end.
 - Demo data and deployment configuration.
 

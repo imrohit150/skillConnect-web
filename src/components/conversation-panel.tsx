@@ -3,18 +3,21 @@ import { AlertCircle, ArrowLeft, Loader2, MessageCircle } from "lucide-react";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
 import { ConversationSession } from "@/components/conversation-session";
+import { PremiumBadge } from "@/components/premium-badge";
+import type { ChatControls } from "@/hooks/use-chat-socket";
 import type { ConversationSummary } from "@/types";
 
 type ConversationPanelProps = {
   conversationId: string | null;
   conversation?: ConversationSummary;
+  chat: ChatControls;
   currentUserId?: string;
   isLoading: boolean;
   error: Error | null;
   onRetry: () => void;
 };
 
-export function ConversationPanel({ conversationId, conversation, currentUserId, isLoading, error, onRetry }: ConversationPanelProps) {
+export function ConversationPanel({ conversationId, conversation, chat, currentUserId, isLoading, error, onRetry }: ConversationPanelProps) {
   return (
     <>
       {conversationId && (
@@ -31,7 +34,7 @@ export function ConversationPanel({ conversationId, conversation, currentUserId,
                 <span className="bg-brand flex size-11 shrink-0 items-center justify-center rounded-2xl font-semibold text-white">{conversation.user.name.charAt(0).toUpperCase()}</span>
               )}
               <div className="min-w-0">
-                <h2 className="truncate font-semibold">{conversation.user.name}</h2>
+                <div className="flex items-center gap-1.5"><h2 className="truncate font-semibold">{conversation.user.name}</h2>{conversation.user.premiumStatus && <PremiumBadge />}</div>
                 <p className="text-xs text-muted-foreground">Private conversation</p>
               </div>
             </>
@@ -39,7 +42,7 @@ export function ConversationPanel({ conversationId, conversation, currentUserId,
         </div>
       )}
 
-      <div className="scroll-thin flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <div className=" flex min-h-0 flex-1 flex-col">
         {!conversationId ? (
           <EmptyState icon={MessageCircle} title="Select a conversation" description="Choose a developer from your inbox to open your conversation." className="rounded-none border-0 bg-transparent shadow-none" />
         ) : isLoading ? (
@@ -53,7 +56,7 @@ export function ConversationPanel({ conversationId, conversation, currentUserId,
             action={error ? <Button onClick={onRetry} variant="outline" className="h-10 cursor-pointer rounded-xl px-5">Try again</Button> : <Link href="/connections" className="text-sm font-semibold text-primary hover:underline">View connections</Link>}
           />
         ) : (
-          <ConversationSession key={conversationId} conversationId={conversationId} currentUserId={currentUserId} otherUserName={conversation.user.name} />
+          <ConversationSession key={conversationId} conversationId={conversationId} currentUserId={currentUserId} otherUserName={conversation.user.name} canMessage={conversation.canMessage !== false} chat={chat} />
         )}
       </div>
     </>

@@ -10,7 +10,7 @@ type MessageBubbleProps = {
 
 export function MessageBubble({ message, isOwn, senderName }: MessageBubbleProps) {
   return (
-    <li className={cn("flex", isOwn ? "justify-end" : "justify-start")}>
+    <li data-message-id={message._id} className={cn("flex", isOwn ? "justify-end" : "justify-start")}>
       <div className={cn(
         "min-w-0 max-w-[85%] rounded-2xl px-4 py-3 shadow-sm sm:max-w-[75%]",
         isOwn ? "bg-brand rounded-br-md text-white" : "rounded-bl-md border bg-white text-foreground",

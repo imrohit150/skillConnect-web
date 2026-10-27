@@ -4,13 +4,15 @@ import { Loader2, Wifi, WifiOff } from "lucide-react";
 import { ConversationHistory } from "@/components/conversation-history";
 import { MessageComposer } from "@/components/message-composer";
 import { Button } from "@/components/ui/button";
-import { useConversationSocket } from "@/hooks/use-conversation-socket";
+import type { ChatControls } from "@/hooks/use-chat-socket";
 import { cn } from "@/lib/utils";
 
 type ConversationSessionProps = {
   conversationId: string;
   currentUserId?: string;
   otherUserName: string;
+  canMessage: boolean;
+  chat: ChatControls;
 };
 
 const connectionLabels = {
@@ -21,8 +23,8 @@ const connectionLabels = {
   error: "Chat connection unavailable",
 };
 
-export function ConversationSession({ conversationId, currentUserId, otherUserName }: ConversationSessionProps) {
-  const { status, error, retry, sendMessage } = useConversationSocket(conversationId);
+export function ConversationSession({ conversationId, currentUserId, otherUserName, canMessage, chat }: ConversationSessionProps) {
+  const { status, error, retry, sendMessage } = chat;
   const pending = status === "connecting" || status === "joining";
   const canRetry = status === "error" || status === "disconnected";
 
@@ -37,7 +39,9 @@ export function ConversationSession({ conversationId, currentUserId, otherUserNa
         {error && <p role="alert" className="w-full leading-relaxed text-destructive">{error}</p>}
       </div>
       <ConversationHistory conversationId={conversationId} currentUserId={currentUserId} otherUserName={otherUserName} />
-      <MessageComposer canSend={status === "ready"} otherUserName={otherUserName} onSend={sendMessage} />
+      {canMessage ? <MessageComposer canSend={status === "ready"} otherUserName={otherUserName} onSend={sendMessage} /> : (
+        <p role="status" className="shrink-0 border-t bg-white/65 p-4 text-center text-sm text-muted-foreground">You’re no longer connected. Reconnect with this developer to send messages.</p>
+      )}
     </div>
   );
 }

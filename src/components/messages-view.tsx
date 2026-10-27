@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/hooks/use-auth";
 import { useConversations } from "@/hooks/use-conversations";
+import { useChatSocket } from "@/hooks/use-chat-socket";
 import { cn } from "@/lib/utils";
 
 function MessagesContent() {
@@ -18,6 +19,7 @@ function MessagesContent() {
   const { data: conversations, isPending, error, isFetching, refetch } = useConversations();
   const currentUserId = user?._id ?? user?.id;
   const selected = conversations?.find((conversation) => conversation.conversationId === conversationId);
+  const chat = useChatSocket(selected?.conversationId ?? null);
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-6">
@@ -105,6 +107,7 @@ function MessagesContent() {
         <ConversationPanel
           conversationId={conversationId}
           conversation={selected}
+          chat={chat}
           currentUserId={currentUserId}
           isLoading={isPending || (!selected && isFetching)}
           error={error}
