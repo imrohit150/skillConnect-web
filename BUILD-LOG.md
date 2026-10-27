@@ -75,6 +75,12 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 
 46. Seeded five verified demo developer profiles through the backend's `scripts/seed-demo-users.js`; they can appear in Discover and be used for requests/connections/chat through normal app actions. They include embedded SVG avatars, bios, skills and varied experience levels. Demo email/password details and safe rerun instructions are in `../skillConnect-backend/scripts/README.md`. No frontend code, dependencies, tests or build were needed for this data step.
 
+47. Applied the existing Messages/Connections instant-navigation fix to Feed and Requests. Moved their client UI into `components/feed-view.tsx` and `components/requests-view.tsx`, preserving Feed's Suspense boundary, and made both route pages Server Component wrappers with `export const instant = false`. This scopes the validation opt-out to pages the client auth layout can withhold while checking a session. No global Next.js configuration or UI behavior changes. No tests, visual checks or build run, per the user's preference.
+
+48. Applied the same instant-navigation fix to Membership: moved the client checkout/membership UI into `components/membership-view.tsx` and kept the route as a Server Component wrapper exporting `instant = false`. Checkout behavior and styling are preserved. No tests, visual checks or build run, per the user's preference.
+
+49. Applied the same scoped instant-navigation fix to Profile. Moved its client form/onboarding UI into `components/profile-view.tsx`, preserving its Suspense boundary, and made the route a Server Component wrapper exporting `instant = false`. No profile behavior or styling changes. No tests, visual checks or build run, per the user's preference.
+
 ## Setup notes
 
 - Copy `.env.example` to `.env.local`.
