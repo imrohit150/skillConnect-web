@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { startTransition, useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,8 +10,8 @@ import { pendingSignupKey, useCurrentUser, usePendingSignup, useResendVerificati
 import { ApiError } from "@/lib/api";
 import type { PendingSignup } from "@/types";
 
-function remaining(until: string | number | null | undefined, now: number) {
-  return until ? Math.max(0, Math.ceil((new Date(until).getTime() - now) / 1000)) : 0;
+function remaining(until: string | number | null | undefined, now: number | null) {
+  return until && now !== null ? Math.max(0, Math.ceil((new Date(until).getTime() - now) / 1000)) : 0;
 }
 
 function clockLabel(seconds: number) {
@@ -28,13 +28,16 @@ export function VerifyEmailView() {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState<number | null>(null);
   const [resendRetryAt, setResendRetryAt] = useState(0);
   const [rateLimitUntil, setRateLimitUntil] = useState(0);
   const [signupEnded, setSignupEnded] = useState(false);
 
   useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    // A state initializer also runs during prerender. Start the clock after mount.
+    const tick = () => startTransition(() => setNow(Date.now()));
+    tick();
+    const timer = window.setInterval(tick, 1000);
     return () => window.clearInterval(timer);
   }, []);
 
@@ -42,10 +45,10 @@ export function VerifyEmailView() {
   const expiresIn = remaining(state?.expiresAt, now);
   const resendIn = Math.max(remaining(state?.resendAvailableAt, now), remaining(resendRetryAt, now));
   const rateLimitIn = remaining(rateLimitUntil, now);
-  const expired = state?.status === "expired" || (Boolean(state?.expiresAt) && expiresIn === 0);
+  const expired = state?.status === "expired" || (now !== null && Boolean(state?.expiresAt) && expiresIn === 0);
   const locked = state?.status === "locked" || state?.attemptsRemaining === 0;
-  const active = state?.status === "sent" && !expired && !locked;
-  const busy = verify.isPending || resend.isPending;
+  const active = now !== null && state?.status === "sent" && !expired && !locked;
+  const busy = now === null || verify.isPending || resend.isPending;
 
   function handleError(failure: Error) {
     setError(failure.message);
@@ -96,10 +99,10 @@ export function VerifyEmailView() {
   if (user?.isEmailVerified) {
     return <div role="status" className="flex items-center gap-3 py-12"><ShieldCheck className="size-6 text-primary" /> Account created. Opening your profile...</div>;
   }
-  if (signupEnded || (signupError instanceof ApiError && signupError.code === "SIGNUP_EXPIRED") || (signup && remaining(signup.expiresAt, now) === 0)) {
+  if (signupEnded || (signupError instanceof ApiError && signupError.code === "SIGNUP_EXPIRED") || (signup && now !== null && remaining(signup.expiresAt, now) === 0)) {
     return <div className="space-y-4 py-8"><h2 className="text-2xl font-bold">Start a new signup</h2><p className="text-sm leading-relaxed text-muted-foreground">This signup expired or was already completed. If you finished verifying your email, you can log in.</p><Link href="/signup" className="inline-flex items-center gap-2 font-semibold text-primary"><ArrowLeft className="size-4" /> Back to signup</Link><p className="text-sm"><Link href="/login" className="text-primary hover:underline">Already verified? Log in</Link></p></div>;
   }
-  if (isPending) {
+  if (isPending || now === null) {
     return <div role="status" className="flex items-center justify-center gap-2 py-16 text-sm text-muted-foreground"><LoaderCircle className="size-5 animate-spin" /> Loading your signup...</div>;
   }
   if (!signup) {
