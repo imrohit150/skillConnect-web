@@ -20,8 +20,8 @@ type DateOfBirthPickerProps = {
 
 export function DateOfBirthPicker({ value, onChange, onBlur, triggerRef, error, compact = false }: DateOfBirthPickerProps) {
   const [open, setOpen] = useState(false);
+  const [latestBirthday, setLatestBirthday] = useState<Date | null>(null);
   const selected = value ? parseISO(value) : undefined;
-  const latestBirthday = subYears(startOfDay(new Date()), 18);
   const earliestBirthday = new Date(1900, 0, 1);
 
   return (
@@ -30,6 +30,8 @@ export function DateOfBirthPicker({ value, onChange, onBlur, triggerRef, error, 
       <Popover
         open={open}
         onOpenChange={(nextOpen) => {
+          // Read the visitor's local date only on interaction, never in prerender.
+          if (nextOpen) setLatestBirthday(subYears(startOfDay(new Date()), 18));
           setOpen(nextOpen);
           if (!nextOpen) onBlur();
         }}
@@ -70,31 +72,33 @@ export function DateOfBirthPicker({ value, onChange, onBlur, triggerRef, error, 
             </div>
             <span className="rounded-full border border-primary/15 bg-white px-2.5 py-1 text-xs font-bold text-primary">18+</span>
           </div>
-          <Calendar
-            mode="single"
-            required
-            selected={selected}
-            defaultMonth={selected ?? latestBirthday}
-            captionLayout="dropdown"
-            reverseYears
-            startMonth={earliestBirthday}
-            endMonth={latestBirthday}
-            disabled={{ before: earliestBirthday, after: latestBirthday }}
-            onSelect={(date) => {
-              // Keep the API's date-only format without converting through UTC.
-              onChange(format(date, "yyyy-MM-dd"));
-              setOpen(false);
-              onBlur();
-            }}
-            autoFocus
-            className="w-full p-3 [--cell-size:2.25rem] [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed"
-            classNames={{
-              dropdown_root: "relative rounded-lg border bg-white px-2 py-1 shadow-sm transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15",
-              dropdown: "absolute inset-0 cursor-pointer bg-white opacity-0",
-              caption_label: "flex items-center gap-1 text-sm font-semibold [&>svg]:size-3.5 [&>svg]:text-muted-foreground",
-              disabled: "text-muted-foreground opacity-30",
-            }}
-          />
+          {latestBirthday && (
+            <Calendar
+              mode="single"
+              required
+              selected={selected}
+              defaultMonth={selected ?? latestBirthday}
+              captionLayout="dropdown"
+              reverseYears
+              startMonth={earliestBirthday}
+              endMonth={latestBirthday}
+              disabled={{ before: earliestBirthday, after: latestBirthday }}
+              onSelect={(date) => {
+                // Keep the API's date-only format without converting through UTC.
+                onChange(format(date, "yyyy-MM-dd"));
+                setOpen(false);
+                onBlur();
+              }}
+              autoFocus
+              className="w-full p-3 [--cell-size:2.25rem] [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed"
+              classNames={{
+                dropdown_root: "relative rounded-lg border bg-white px-2 py-1 shadow-sm transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15",
+                dropdown: "absolute inset-0 cursor-pointer bg-white opacity-0",
+                caption_label: "flex items-center gap-1 text-sm font-semibold [&>svg]:size-3.5 [&>svg]:text-muted-foreground",
+                disabled: "text-muted-foreground opacity-30",
+              }}
+            />
+          )}
           <p className="border-t bg-background/40 px-4 py-3 text-xs text-muted-foreground">You must be at least 18 years old to join.</p>
         </PopoverContent>
       </Popover>
