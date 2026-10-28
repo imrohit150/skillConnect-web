@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ApiError } from "@/lib/api";
 import { useCurrentUser } from "@/hooks/use-auth";
+import { AppShellSkeleton } from "@/components/loading-skeletons";
 
 export default function Home() {
   const router = useRouter();
@@ -16,11 +17,9 @@ export default function Home() {
     }
   }, [user, error, router]);
 
-  return (
-    <div className="flex flex-1 items-center justify-center text-muted-foreground">
-      {error && !(error instanceof ApiError && error.status === 401)
-        ? "Could not reach the server. Try again shortly."
-        : "Loading..."}
-    </div>
-  );
+  if (error && !(error instanceof ApiError && error.status === 401)) {
+    return <div className="flex flex-1 items-center justify-center text-muted-foreground">Could not reach the server. Try again shortly.</div>;
+  }
+
+  return <AppShellSkeleton />;
 }

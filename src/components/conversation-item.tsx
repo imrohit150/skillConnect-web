@@ -67,7 +67,7 @@ export function ConversationItem({ conversation, currentUserId, selected = false
 
 export function ConversationItemSkeleton() {
   return (
-    <li aria-hidden="true" className="flex animate-pulse items-center gap-3 p-4 sm:gap-4 sm:p-5">
+    <li aria-hidden="true" className="flex animate-pulse items-center gap-3 p-4 motion-reduce:animate-none sm:gap-4 sm:p-5">
       <div className="size-12 shrink-0 rounded-2xl bg-muted sm:size-14" />
       <div className="min-w-0 flex-1 space-y-2.5">
         <div className="flex items-center justify-between gap-4">

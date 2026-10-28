@@ -7,6 +7,7 @@ import { Compass, Loader2, MessageCircle, UserMinus, Users } from "lucide-react"
 import { toast } from "sonner";
 import { EmptyState } from "@/components/empty-state";
 import { RequestCard } from "@/components/request-card";
+import { RequestCardSkeletonGrid } from "@/components/request-card-skeleton";
 import { UserDrawer } from "@/components/user-drawer";
 import { Button } from "@/components/ui/button";
 import {
@@ -90,9 +91,7 @@ export default function ConnectionsView() {
 
       <div className="scroll-thin -mx-2 flex min-h-0 flex-1 flex-col overflow-y-auto px-2 pb-2">
         {isPending ? (
-          <div className="flex justify-center py-24">
-            <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          </div>
+          <RequestCardSkeletonGrid label="Loading connections..." />
         ) : error ? (
           <p className="text-destructive">{error.message}</p>
         ) : data.length === 0 ? (

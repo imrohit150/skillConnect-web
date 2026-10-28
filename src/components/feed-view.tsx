@@ -6,6 +6,7 @@ import { ChevronDown, Loader2, Search, SearchX, Users, X } from "lucide-react";
 import { EmptyState } from "@/components/empty-state";
 import { UserCard, UserCardSkeleton } from "@/components/user-card";
 import { UserDrawer } from "@/components/user-drawer";
+import { DeveloperPageSkeleton } from "@/components/loading-skeletons";
 import { useUsers } from "@/hooks/use-users";
 import { cn } from "@/lib/utils";
 import type { ExperienceLevel } from "@/types";
@@ -194,7 +195,7 @@ function FeedContent() {
 
 export default function FeedView() {
   return (
-    <Suspense>
+    <Suspense fallback={<DeveloperPageSkeleton />}>
       <FeedContent />
     </Suspense>
   );

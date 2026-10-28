@@ -6,6 +6,7 @@ import { ArrowRight, BadgeCheck, Check, Crown, FlaskConical, Loader2, ShieldChec
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { PremiumBadge } from "@/components/premium-badge";
+import { MembershipStatusSkeleton } from "@/components/loading-skeletons";
 import { useCurrentUser } from "@/hooks/use-auth";
 import { useDemoCheckout, useMembership } from "@/hooks/use-membership";
 import { CheckoutCancelled } from "@/lib/razorpay";
@@ -58,7 +59,7 @@ export default function MembershipView() {
       </div>
 
       {membership.isPending ? (
-        <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" /> Checking your membership…</p>
+        <MembershipStatusSkeleton />
       ) : membership.error ? (
         <div role="alert" className="flex flex-wrap items-center gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-4 text-sm">
           <p>We couldn’t check your membership. {membership.error.message}</p>

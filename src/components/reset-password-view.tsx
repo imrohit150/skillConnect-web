@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight, CircleCheck, KeyRound, LoaderCircle, Lock, ShieldCheck } from "lucide-react";
 import { AuthField } from "@/components/auth-field";
+import { AuthFormSkeleton } from "@/components/loading-skeletons";
 import { useResetPassword } from "@/hooks/use-auth";
 import { ApiError } from "@/lib/api";
 import { resetPasswordSchema, type ResetPasswordValues } from "@/lib/validators";
@@ -40,7 +41,7 @@ function ResetPasswordForm({ token, onComplete }: { token: string | null; onComp
   const { register, handleSubmit, reset: clearForm, formState: { errors, isValid } } = useForm<ResetPasswordValues>({ resolver: zodResolver(resetPasswordSchema), mode: "onChange" });
   const expired = reset.error instanceof ApiError && reset.error.code === "INVALID_RESET_TOKEN";
 
-  if (token === null) return <div role="status" className="flex items-center justify-center gap-2 py-16 text-sm text-muted-foreground"><LoaderCircle className="size-5 animate-spin" /> Opening reset link...</div>;
+  if (token === null) return <AuthFormSkeleton variant="reset" />;
   if (!/^[a-f0-9]{64}$/.test(token) || expired) return (
     <div className="space-y-5">
       <div className="flex size-16 items-center justify-center rounded-2xl border border-amber-200 bg-amber-50 text-amber-700"><KeyRound className="size-8" /></div>

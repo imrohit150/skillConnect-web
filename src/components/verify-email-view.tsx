@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight, Clock3, LoaderCircle, MailCheck, RefreshCw, Shie
 import { toast } from "sonner";
 import { pendingSignupKey, useCurrentUser, usePendingSignup, useResendVerification, useVerifyEmail } from "@/hooks/use-auth";
 import { ApiError } from "@/lib/api";
+import { AuthFormSkeleton } from "@/components/loading-skeletons";
 import type { PendingSignup } from "@/types";
 
 function remaining(until: string | number | null | undefined, now: number | null) {
@@ -103,7 +104,7 @@ export function VerifyEmailView() {
     return <div className="space-y-4 py-8"><h2 className="text-2xl font-bold">Start a new signup</h2><p className="text-sm leading-relaxed text-muted-foreground">This signup expired or was already completed. If you finished verifying your email, you can log in.</p><Link href="/signup" className="inline-flex items-center gap-2 font-semibold text-primary"><ArrowLeft className="size-4" /> Back to signup</Link><p className="text-sm"><Link href="/login" className="text-primary hover:underline">Already verified? Log in</Link></p></div>;
   }
   if (isPending || now === null) {
-    return <div role="status" className="flex items-center justify-center gap-2 py-16 text-sm text-muted-foreground"><LoaderCircle className="size-5 animate-spin" /> Loading your signup...</div>;
+    return <AuthFormSkeleton />;
   }
   if (!signup) {
     return <div className="space-y-4 py-8 text-center"><p role="alert">Could not load your signup. Please try again.</p><button type="button" onClick={() => void refetch()} className="font-semibold text-primary hover:underline">Try again</button></div>;

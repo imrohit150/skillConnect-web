@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { AlertCircle, ArrowLeft, Loader2, MessageCircle } from "lucide-react";
+import { AlertCircle, ArrowLeft, MessageCircle } from "lucide-react";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
 import { ConversationSession } from "@/components/conversation-session";
 import { PremiumBadge } from "@/components/premium-badge";
+import { ChatHistorySkeleton, ConversationHeaderSkeleton } from "@/components/loading-skeletons";
 import type { ChatControls } from "@/hooks/use-chat-socket";
 import type { ConversationSummary } from "@/types";
 
@@ -38,7 +39,7 @@ export function ConversationPanel({ conversationId, conversation, chat, currentU
                 <p className="text-xs text-muted-foreground">Private conversation</p>
               </div>
             </>
-          ) : <h2 className="font-semibold">Conversation</h2>}
+          ) : isLoading ? <ConversationHeaderSkeleton /> : <h2 className="font-semibold">Conversation</h2>}
         </div>
       )}
 
@@ -46,7 +47,7 @@ export function ConversationPanel({ conversationId, conversation, chat, currentU
         {!conversationId ? (
           <EmptyState icon={MessageCircle} title="Select a conversation" description="Choose a developer from your inbox to open your conversation." className="rounded-none border-0 bg-transparent shadow-none" />
         ) : isLoading ? (
-          <div role="status" className="flex flex-1 items-center justify-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-5 animate-spin" />Opening conversation…</div>
+          <ChatHistorySkeleton withComposer />
         ) : !conversation ? (
           <EmptyState
             icon={AlertCircle}

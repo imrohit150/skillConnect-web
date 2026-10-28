@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { BottomNav, Sidebar } from "@/components/app-nav";
+import { AppShellSkeleton } from "@/components/loading-skeletons";
 import { ApiError } from "@/lib/api";
 import { isProfileComplete } from "@/lib/profile";
 import { useCurrentUser, useLogout } from "@/hooks/use-auth";
@@ -30,11 +31,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [user, locked, pathname, router]);
 
   if (isPending || (user && !user.isEmailVerified) || (user?.isEmailVerified && profilePending)) {
-    return (
-      <div className="flex flex-1 items-center justify-center">
-        <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    );
+    return <AppShellSkeleton pathname={pathname} />;
   }
 
   if (!user) {

@@ -6,6 +6,7 @@ import { AlertCircle, ArrowDown, History, Loader2, MessageCircle, RefreshCw } fr
 import { EmptyState } from "@/components/empty-state";
 import { MessageBubble } from "@/components/message-bubble";
 import { Button } from "@/components/ui/button";
+import { ChatHistorySkeleton } from "@/components/loading-skeletons";
 import { useMessages } from "@/hooks/use-messages";
 import { compareMessages } from "@/lib/chat-cache";
 import { cn } from "@/lib/utils";
@@ -94,7 +95,7 @@ export function ConversationHistory({ conversationId, currentUserId, otherUserNa
         className="scroll-thin flex min-h-0 flex-1 flex-col overflow-y-auto"
       >
         {!hasLoaded && !error ? (
-          <div role="status" className="flex flex-1 items-center justify-center gap-2 p-6 text-sm text-muted-foreground"><Loader2 className="size-5 animate-spin" />Loading messages…</div>
+          <ChatHistorySkeleton />
         ) : error && !hasLoaded ? (
           <EmptyState icon={AlertCircle} title="Couldn’t load messages" description={error.message} className="rounded-none border-0 bg-transparent shadow-none"
             action={<Button onClick={() => refetch()} disabled={isFetching} variant="outline" className="h-10 cursor-pointer gap-2 rounded-xl px-5"><RefreshCw className={cn("size-4", isFetching && "animate-spin")} />{isFetching ? "Trying again…" : "Try again"}</Button>}

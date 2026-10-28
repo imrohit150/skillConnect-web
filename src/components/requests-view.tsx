@@ -6,6 +6,7 @@ import { Check, Compass, EyeOff, Inbox, Loader2, Send, Undo2, X } from "lucide-r
 import { toast } from "sonner";
 import { EmptyState } from "@/components/empty-state";
 import { RequestCard } from "@/components/request-card";
+import { RequestCardSkeletonGrid } from "@/components/request-card-skeleton";
 import { UserDrawer } from "@/components/user-drawer";
 import {
   useAcceptRequest,
@@ -35,21 +36,13 @@ function DiscoverLink() {
   );
 }
 
-function Spinner() {
-  return (
-    <div className="flex justify-center py-24">
-      <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-    </div>
-  );
-}
-
 function ReceivedList() {
   const { data, isPending, error } = useReceivedRequests();
   const accept = useAcceptRequest();
   const ignore = useIgnoreRequest();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  if (isPending) return <Spinner />;
+  if (isPending) return <RequestCardSkeletonGrid label="Loading received requests..." />;
   if (error) return <p className="text-destructive">{error.message}</p>;
   if (data.length === 0)
     return (
@@ -123,7 +116,7 @@ function SentList() {
   const cancel = useCancelRequest();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  if (isPending) return <Spinner />;
+  if (isPending) return <RequestCardSkeletonGrid label="Loading sent requests..." actionCount={1} />;
   if (error) return <p className="text-destructive">{error.message}</p>;
   if (data.length === 0)
     return (
@@ -180,7 +173,7 @@ function PassedList() {
   const unpass = useUnpassUser();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  if (isPending) return <Spinner />;
+  if (isPending) return <RequestCardSkeletonGrid label="Loading passed developers..." actionCount={1} />;
   if (error) return <p className="text-destructive">{error.message}</p>;
   if (data.length === 0)
     return (

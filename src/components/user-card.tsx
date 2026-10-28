@@ -74,7 +74,7 @@ export function UserCard({ user, onOpen }: UserCardProps) {
 
 export function UserCardSkeleton() {
   return (
-    <div className="glass animate-pulse rounded-[2rem] border bg-white/60 p-3">
+    <div className="glass animate-pulse rounded-[2rem] border bg-white/60 p-3 motion-reduce:animate-none">
       <div className="aspect-[4/3] rounded-3xl bg-muted" />
       <div className="space-y-3 px-3 py-4">
         <div className="h-5 w-1/2 rounded bg-muted" />

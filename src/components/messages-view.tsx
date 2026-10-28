@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AlertCircle, MessageCircle, RefreshCw, Users } from "lucide-react";
 import { ConversationItem, ConversationItemSkeleton } from "@/components/conversation-item";
+import { MessagesSkeleton } from "@/components/loading-skeletons";
 import { ConversationPanel } from "@/components/conversation-panel";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
@@ -122,7 +123,7 @@ function MessagesContent() {
 
 export default function MessagesView() {
   return (
-    <Suspense fallback={<div role="status" className="flex h-full items-center justify-center text-sm text-muted-foreground">Loading messages…</div>}>
+    <Suspense fallback={<MessagesSkeleton />}>
       <MessagesContent />
     </Suspense>
   );

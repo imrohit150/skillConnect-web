@@ -9,6 +9,7 @@ import { ArrowLeft, ArrowRight, Briefcase, Camera, Code2, Crown, Globe, Link2, L
 import { toast } from "sonner";
 import { AuthField } from "@/components/auth-field";
 import { ProfileCard } from "@/components/profile-card";
+import { ProfileSkeleton } from "@/components/loading-skeletons";
 import { TagInput } from "@/components/tag-input";
 import { Label } from "@/components/ui/label";
 import { useMyProfile, useUpdateProfile, useUploadProfileImage } from "@/hooks/use-profile";
@@ -258,9 +259,7 @@ function ProfileContent() {
       )}
 
       {isPending ? (
-        <div className="flex justify-center py-20">
-          <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        </div>
+        <ProfileSkeleton />
       ) : error ? (
         <p className="text-destructive">{error.message}</p>
       ) : (
@@ -272,7 +271,7 @@ function ProfileContent() {
 
 export default function ProfileView() {
   return (
-    <Suspense>
+    <Suspense fallback={<ProfileSkeleton fullPage />}>
       <ProfileContent />
     </Suspense>
   );
