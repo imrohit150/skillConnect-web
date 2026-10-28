@@ -81,6 +81,8 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 
 49. Applied the same scoped instant-navigation fix to Profile. Moved its client form/onboarding UI into `components/profile-view.tsx`, preserving its Suspense boundary, and made the route a Server Component wrapper exporting `instant = false`. No profile behavior or styling changes. No tests, visual checks or build run, per the user's preference.
 
+50. Prepared hosted authentication with first-party cookies: production API requests use `/api/v1` and chat uses the current frontend origin at `/socket.io`, with Next.js external rewrites forwarding to the server-configured `BACKEND_ORIGIN`. Production configuration requires an explicit HTTPS backend origin without path/credentials/query/fragment and ignores the development public API/socket URLs. Hosted Socket.IO uses HTTP long polling without WebSocket upgrades, keeping server-pushed events and existing acknowledgements/reconnect logic; the rewrite handles Engine.IO's upstream trailing slash. Local development preserves direct backend URLs and transport upgrades. REST requests disable caching; the backend also marks API/socket responses private/no-store and uses host-only HttpOnly/Secure/SameSite=Lax cookies. Added setup examples and `DEPLOYMENT.md` covering required Vercel/Render variables, build-time rewrite configuration, proxy depth, long-polling quota tradeoff and manual authentication/chat checks. Read the installed Next.js rewrites and environment-variable docs before editing. No dependencies/scripts, secrets, local environment values, builds, tests or visual/deployment checks were added/run.
+
 ## Setup notes
 
 - Copy `.env.example` to `.env.local`.
@@ -88,7 +90,7 @@ Frontend for SkillConnect. The backend lives in the separate `skillConnect-backe
 
 ## Next
 
-- Test signup OTP email delivery end to end with the backend and configured Resend sender.
+- Test signup OTP email delivery end to end with the backend and configured Brevo sender.
 - Verify old-session rejection against the live backend before final demo-data setup.
 - Test the complete Razorpay test Checkout and webhook flow end to end.
 - Deployment configuration; optionally add example requests/conversations between the seeded demo developers.

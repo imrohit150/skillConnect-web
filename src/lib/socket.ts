@@ -23,7 +23,16 @@ export type ChatConnectionState = {
 };
 
 export function createChatSocket(): ChatSocket {
-  return io(process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:5000", {
+  const isProduction = process.env.NODE_ENV === "production";
+  return io(isProduction ? undefined : process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:5000", {
+    // Keep hosted chat on the same origin as the first-party access-token cookie.
+    // HTTP long polling carries live Socket.IO events through the external rewrite.
+    ...(isProduction ? {
+      path: "/socket.io",
+      addTrailingSlash: false,
+      transports: ["polling"],
+      upgrade: false,
+    } : {}),
     autoConnect: false,
     withCredentials: true,
     forceNew: true,

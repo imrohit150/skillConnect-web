@@ -20,6 +20,10 @@ Scroll to the top and select **Load older messages** to retrieve earlier history
 
 ## Chat checks
 
+For hosted API/chat URLs, first-party cookie routing and required environment
+settings, see [DEPLOYMENT.md](./DEPLOYMENT.md). Production chat uses the
+frontend's same-origin HTTP proxy rather than the direct development socket URL.
+
 With the sibling `skillConnect-backend` checkout and both projects' dependencies installed, run `npm run test:chat`. The suite uses the installed Google Chrome in headless mode, a Next.js development server on port 3100, and an in-memory fixture API on port 5101. It exercises the real backend message-history controller and Socket.IO handler without loading backend `.env`, connecting to MongoDB or calling email/payment services. It uses a separate `.next-chat-tests` output directory and does not run a production build.
 
 The tests cover cursor pagination (including equal timestamps), scroll preservation, retries, two-user delivery, private background inbox updates, reconnect/session refresh, uncertain delivery without duplicate sends, removed connections and mobile navigation. Screenshots and failure traces are written to the ignored `test-results` directory.

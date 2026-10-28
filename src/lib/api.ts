@@ -1,6 +1,9 @@
 import { API_ROUTES } from "@/constants/routes";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api/v1";
+// Production requests stay on the frontend origin so HttpOnly cookies are first-party.
+const API_URL = process.env.NODE_ENV === "production"
+  ? "/api/v1"
+  : process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api/v1";
 
 export class ApiError extends Error {
   status: number;
@@ -23,6 +26,7 @@ function refreshSession(): Promise<boolean> {
   refreshPromise ??= fetch(`${API_URL}${API_ROUTES.auth.refresh}`, {
     method: "POST",
     credentials: "include",
+    cache: "no-store",
   })
     .then((res) => res.ok)
     .catch(() => false)
@@ -37,7 +41,7 @@ async function request(path: string, init: RequestInit): Promise<Response> {
   if (!(init.body instanceof FormData) && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
-  return fetch(`${API_URL}${path}`, { ...init, credentials: "include", headers });
+  return fetch(`${API_URL}${path}`, { ...init, cache: "no-store", credentials: "include", headers });
 }
 
 const NO_REFRESH_PATHS: string[] = [
